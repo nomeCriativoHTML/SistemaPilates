@@ -1,0 +1,289 @@
+:root {
+    --primary-color: #007bff; 
+    --text-color: #333;
+    --light-gray: #f8f9fa;
+    --border-color: #e9ecef;
+    --icon-gray: #6c757d;
+    --active-color: #007bff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: white;
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+.dashboard-container {
+    max-width: 600px; 
+    margin: 0 auto;
+    background-color: white;
+    min-height: 100vh;
+    padding-bottom: 60px; 
+}
+
+/* Cabeçalho */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.header-left i {
+    margin-right: 10px;
+    font-size: 1.2em;
+    color: var(--icon-gray);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-right .fa-bell {
+    font-size: 1.2em;
+    color: var(--icon-gray);
+    margin-right: 15px;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--light-gray); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--icon-gray);
+    border: 1px solid var(--border-color);
+}
+
+.profile-icon i {
+    font-size: 1.5em; 
+}
+
+
+/* Saudação  */
+.greeting {
+    padding: 20px 15px;
+}
+
+.greeting h2 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+.greeting p {
+    color: var(--icon-gray);
+    font-size: 0.9em;
+}
+
+/*  Seções Gerais  */
+.section {
+    padding: 15px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-header h3 {
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.section-header i {
+    color: var(--icon-gray);
+    font-size: 1.1em;
+}
+
+/* Estilo para listas de aulas/itens */
+.class-list, .next-class-list {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.class-item, .next-class-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.class-item:last-child, .next-class-item:last-child {
+    border-bottom: none;
+}
+
+.icon-small {
+    font-size: 0.5em; 
+    color: var(--icon-gray);
+    margin-right: 10px;
+}
+
+.class-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.class-time, .class-day {
+    font-weight: 500;
+    font-size: 0.95em;
+    margin-bottom: 3px;
+}
+
+.class-name {
+    color: var(--icon-gray);
+    font-size: 0.9em;
+}
+
+.next-class-item {
+    justify-content: space-between;
+}
+
+.class-count {
+    font-size: 0.9em;
+    color: var(--icon-gray);
+    padding: 5px 10px;
+    background-color: var(--light-gray);
+    border-radius: 4px;
+}
+
+
+/*  Ações Rápidas  */
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    height: 100px; 
+    cursor: pointer;
+}
+
+.action-card i {
+    font-size: 1.5em;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.action-card span {
+    font-size: 0.85em;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/*  Atividade Recente  */
+.recent-activity ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recent-activity li {
+    display: flex;
+    flex-wrap: wrap; 
+    align-items: center;
+    padding: 8px 0;
+}
+
+.recent-activity .icon-small {
+    font-size: 0.35em; 
+    margin-right: 8px;
+    color: black;
+}
+
+.activity-text {
+    flex-grow: 1;
+    font-size: 0.9em;
+}
+
+.activity-time {
+    font-size: 0.8em;
+    color: var(--icon-gray);
+    margin-left: auto; 
+}
+
+/* Estilo para negrito em palavras específicas dentro da atividade */
+.activity-text strong {
+    font-weight: 600;
+}
+
+
+/*  Barra de Navegação Inferior  */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 600px; 
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 55px;
+    background-color: white;
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--icon-gray);
+    font-size: 0.7em;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.nav-item i {
+    font-size: 1.2em;
+    margin-bottom: 2px;
+}
+
+.nav-item.active {
+    color: var(--active-color); 
+}
+
+.nav-item.active i {
+    color: var(--active-color);
+}
+
+/* responsividade em telas muito estreitas */
+@media (max-width: 400px) {
+    .action-card {
+        padding: 15px 5px;
+        height: 80px;
+    }
+}

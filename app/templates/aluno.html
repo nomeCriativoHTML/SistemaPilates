@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Aluno</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="/app/static/CSS/aluno.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="header-left">
+                <div class="profile-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="greeting">
+                    <span>Dashboard</span>
+                    <h2>Bem-vindo, João</h2>
+                </div>
+            </div>
+            <div class="header-right">
+                <i class="far fa-bell"></i>
+            </div>
+        </header>
+        
+        <section class="main-actions">
+            <button class="btn btn-primary">
+                <i class="far fa-calendar-check"></i> Agendar Aula
+            </button>
+            <button class="btn btn-secondary">
+                <i class="far fa-calendar-alt"></i> Remarcar Aula
+            </button>
+        </section>
+
+        <section class="alert-section">
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="alert-content">
+                    <span class="alert-title">Pagamento em Atraso</span>
+                    <p>Sua mensalidade de dezembro está em atraso. Regularize para continuar agendando aulas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h3>Agenda do Estúdio</h3>
+                <i class="far fa-calendar-alt"></i>
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item">
+                    <div class="item-details">
+                        <span class="item-time">Hoje - 14:00</span>
+                        <span class="item-description">Prof. Maria Silva</span>
+                        <span class="item-location">Pilates - Estúdio A</span>
+                    </div>
+                    <span class="tag tag-confirmed">Confirmado</span>
+                </div>
+                
+                <div class="schedule-item">
+                    <div class="item-details">
+                        <span class="item-time">Amanhã - 10:00</span>
+                        <span class="item-description">Fisioterapia</span>
+                        <span class="item-location">Funcional - Estúdio B</span>
+                    </div>
+                    <span class="tag tag-approved">Agendado</span>
+                </div>
+
+                <button class="btn btn-tertiary">Ver agenda completa</button>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h3>Aulas do Mês</h3>
+                <i class="fas fa-external-link-alt"></i>
+            </div>
+            <div class="month-stats">
+                <div class="month-header">
+                    <span class="month-name">Janeiro 2025</span>
+                    <span class="month-count">8/12</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 66%;"></div> </div>
+                <div class="stats-boxes">
+                    <div class="stat-box">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Realizadas</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Restantes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h3>Próximo Pagamento</h3>
+                <i class="far fa-calendar-alt"></i>
+            </div>
+            <div class="payment-card">
+                <div class="payment-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Vencimento</span>
+                        <span class="detail-value">05/02/2025</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Valor</span>
+                        <span class="detail-value value-bold">R$ 150,00</span>
+                    </div>
+                </div>
+                <button class="btn btn-outline">Visualizar boletos</button>
+            </div>
+        </section>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </div>
+            <div class="nav-item">
+                <i class="far fa-calendar-alt"></i>
+                <span>Agenda</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Evolução</span>
+            </div>
+            <div class="nav-item">
+                <i class="far fa-user"></i>
+                <span>Perfil</span>
+            </div>
+        </nav>
+    </div>
+
+</body>
+</html>

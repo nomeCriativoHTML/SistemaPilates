@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="/static/CSS/cadastro.css">
+  <link rel="icon" href="/static/img/img-tela-login.jpg" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="btn-voltar" aria-label="Voltar">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1>Cadastro</h1>
+  </header>
+
+  <main>
+    <nav class="tab-nav" aria-label="Tipo de cadastro">
+      <button class="tab ativo" data-tab="aluno">Aluno</button>
+      <button class="tab" data-tab="professor">Professor</button>
+      <button class="tab" data-tab="estudio">Estúdio</button>
+    </nav>
+
+    <section class="form-container">
+
+     
+      <form id="form-aluno" class="formulario ativo">
+  <fieldset>
+    <legend>Informações do Aluno</legend>
+
+    <label for="nome">Nome completo</label>
+    <input type="text" id="nome" name="nome" placeholder="Digite o nome do aluno" required>
+
+    <label for="cpf">CPF</label>
+    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="email@exemplo.com" required>
+
+    <label for="senha">Senha</label>
+    <input type="password" id="senha" name="senha" placeholder="Digite uma senha" required>
+
+    <label for="telefone">Telefone</label>
+    <input type="tel" id="telefone" name="telefone" placeholder="(11)99999-9999">
+
+    <label for="data_nascimento">Data de Nascimento</label>
+    <input type="date" id="data_nascimento" name="data_nascimento">
+
+    <label for="status_pagamento">Status de pagamento</label>
+    <select id="status_pagamento" name="status_pagamento" required>
+      <option value="pendente" selected>Pendente</option>
+      <option value="pago">Pago</option>
+      <option value="atrasado">Atrasado</option>
+    </select>
+  </fieldset>
+
+  <div class="form-actions">
+    <button type="button" class="btn cancelar">Cancelar</button>
+    <button type="submit" class="btn salvar">Salvar</button>
+  </div>
+</form>
+
+
+
+      
+      <form id="form-professor" class="formulario">
+        <fieldset>
+          <legend>Informações do Professor</legend>
+
+          <label for="nome-prof">Nome completo</label>
+          <input type="text" id="nome-prof" name="nome-prof" placeholder="Digite o nome do professor" required>
+
+          <label for="email-prof">Email</label>
+          <input type="email" id="email-prof" name="email-prof" placeholder="email@exemplo.com" required>
+
+          <label for="telefone-prof">Telefone</label>
+          <input type="tel" id="telefone-prof" name="telefone-prof" placeholder="(11)99999-9999" required>
+
+          <label for="especialidade">Especialidade</label>
+          <input type="text" id="especialidade" name="especialidade" placeholder="Ex: Pilates Avançado" required>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="button" class="btn cancelar">Cancelar</button>
+          <button type="submit" class="btn salvar">Salvar</button>
+        </div>
+      </form>
+
+      
+      <form id="form-estudio" class="formulario">
+        <fieldset>
+          <legend>Informações do Estúdio</legend>
+
+          <label for="nome-estudio">Nome do Estúdio</label>
+          <input type="text" id="nome-estudio" name="nome-estudio" placeholder="Digite o nome do estúdio" required>
+
+          <label for="endereco">Endereço</label>
+          <input type="text" id="endereco" name="endereco" placeholder="Rua Exemplo, 123" required>
+
+          <label for="telefone-estudio">Telefone</label>
+          <input type="tel" id="telefone-estudio" name="telefone-estudio" placeholder="(11)99999-9999" required>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="button" class="btn cancelar">Cancelar</button>
+          <button type="submit" class="btn salvar">Salvar</button>
+        </div>
+      </form>
+
+    </section>
+  </main>
+
+  <script src="/static/JS/cadastro.js"></script>
+</body>
+</html>
