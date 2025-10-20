@@ -1,68 +1,162 @@
 # Sistema Pilates
 
-README com visão geral, estrutura de pastas e instruções rápidas para rodar o projeto.
+README atualizado com a estrutura completa do projeto, instruções para rodar e pontos importantes.
 
 ## Visão geral
-Projeto backend/front-end leve usando FastAPI + Jinja2 para gerenciar alunos, professores, estúdios, agendas e evoluções.
+Sistema web leve usando FastAPI + Jinja2 para gerenciar alunos, professores, estúdios, agendas, agendamentos e evoluções.
 
-## Estrutura principal (resumida)
-- [main.py](main.py) — Ponto de entrada e configuração do FastAPI; variável de templates: [`templates`](main.py)
-- [.env](.env) — Variáveis de ambiente (conexão MySQL)
-- [requirements.txt](requirements.txt) — Dependências do projeto
-- [alembic/](alembic/) — Migrations (ver [alembic/env.py](alembic/env.py) e [alembic/versions/aaab08ca480d_initial_tables.py](alembic/versions/aaab08ca480d_initial_tables.py))
+## Estrutura completa do projeto
+- README.md
+- .env
+- requirements.txt
+- alembic.ini
+- Dockerfile
+- main.py
+- alembic/
+  - env.py
+  - script.py.mako
+  - versions/
+    - aaab08ca480d_initial_tables.py
+- app/
+  - __init__.py
+  - core/
+    - __init__.py
+    - config.py
+  - database/
+    - __init__.py
+    - connection.py
+  - models/
+    - __init__.py
+    - aluno.py
+    - professor.py
+    - estudio.py
+    - admin.py
+    - enums.py
+    - relacionamentos/
+      - __init__.py
+      - agenda.py
+      - agendamentos.py
+  - schema/
+    - __init__.py
+    - aluno.py
+    - professor.py
+    - estudio.py
+    - admin.py
+    - agenda.py
+    - agendamento.py
+    - evolucao.py
+  - controllers/
+    - __init__.py
+    - aluno_controller.py
+    - professor_controller.py
+    - estudio_controller.py
+    - admin_controller.py
+    - agenda_controller.py
+    - agendamento_controller.py
+    - evolucao_controller.py
+  - routes/
+    - __init__.py
+    - aluno_routes.py
+    - professor_routes.py
+    - estudio_routes.py
+    - admin_routes.py
+    - login_routes.py
+    - agenda_routes.py
+    - agendamento_routes.py
+    - evolucao_routes.py
+  - templates/
+    - base.html
+    - cadastro.html
+    - login.html
+    - aluno.html
+    - professor.html
+    - estudio.html
+    - admin.html
+    - agenda.html
+    - agendamento.html
+    - evolucao.html
+  - static/
+    - JS/
+      - cadastro.js
+      - login.js
+      - agenda.js
+      - agendamento.js
+      - evolucao.js
+    - CSS/
+      - cadastro.css
+      - login.css
+      - aluno.css
+      - professor.css
+      - estudio.css
+      - admin.css
+      - agenda.css
+      - agendamento.css
+      - evolucao.css
+    - images/
+  - utils/
+    - __init__.py
+    - auth.py
+    - helpers.py
+  - tests/
+    - __init__.py
+    - test_models.py
+    - test_controllers.py
+    - test_routes.py
+    - test_integration.py
 
-Código da aplicação em `app/`:
-- [app/database/connection.py](app/database/connection.py) — Engine SQLAlchemy, `Base`, `SessionLocal` e dependency [`get_db`](app/database/connection.py)
-- [app/models/](app/models/) — Models SQLAlchemy (ver [app/models/__init__.py](app/models/__init__.py))
-  - Principais models: [app/models/aluno.py](app/models/aluno.py), [app/models/professor.py](app/models/professor.py), [app/models/estudio.py](app/models/estudio.py), [app/models/admin.py](app/models/admin.py)
-  - Enums: [app/models/enums.py](app/models/enums.py)
-  - Relacionamentos: [app/models/relacionamentos/agenda.py](app/models/relacionamentos/agenda.py), [app/models/relacionamentos/agendamentos.py](app/models/relacionamentos/agendamentos.py)
-- [app/schema/](app/schema/) — Schemas Pydantic (ex.: [app/schema/aluno.py](app/schema/aluno.py), [app/schema/professor.py](app/schema/professor.py), [app/schema/estudio.py](app/schema/estudio.py), [app/schema/admin.py](app/schema/admin.py))
-  - Ex.: schema de entrada: [`AlunoCreate`](app/schema/aluno.py)
-- [app/controllers/](app/controllers/) — Lógica de domínio / CRUD
-  - Controle de alunos: [`AlunoController`](app/controllers/aluno_controller.py) e método [`AlunoController.criar_aluno`](app/controllers/aluno_controller.py)
-  - Admin/gestão: [app/controllers/admin_controller.py](app/controllers/admin_controller.py)
-- [app/routes/](app/routes/) — Routers FastAPI (ex.: [app/routes/aluno_routes.py](app/routes/aluno_routes.py), [app/routes/login_routes.py](app/routes/login_routes.py), [app/routes/admin_routes.py](app/routes/admin_routes.py))
-  - Ex.: rota de cadastro de alunos: [`aluno_routes.pagina_cadastro`](app/routes/aluno_routes.py)
-- [app/templates/](app/templates/) — Templates Jinja2 (ex.: [cadastro.html](app/templates/cadastro.html), [login.html](app/templates/login.html), [aluno.html](app/templates/aluno.html), [admin.html](app/templates/admin.html), [agenda.html](app/templates/agenda.html), [evolucao.html](app/templates/evolucao.html), [professor.html](app/templates/professor.html))
-- [app/static/](app/static/) — Arquivos estáticos (JS/CSS)
-  - JS: [app/static/JS/cadastro.js](app/static/JS/cadastro.js), [app/static/JS/login.js](app/static/JS/login.js), [app/static/JS/agenda.js](app/static/JS/agenda.js)
-  - CSS: [app/static/CSS/cadastro.css](app/static/CSS/cadastro.css), [app/static/CSS/login.css](app/static/CSS/login.css), [app/static/CSS/aluno.css](app/static/CSS/aluno.css), [app/static/CSS/admin.css](app/static/CSS/admin.css), [app/static/CSS/agenda.css](app/static/CSS/agenda.css), [app/static/CSS/evolucao.css](app/static/CSS/evolucao.css), [app/static/CSS/professor.css](app/static/CSS/professor.css)
+## Fluxo e responsabilidades
+1. Rotas (app/routes/) recebem requisições e injetam dependências (get_db).
+2. Controllers (app/controllers/) implementam regras de negócio e chamam models.
+3. Models (app/models/) representam a camada de persistência (SQLAlchemy).
+4. Schemas (app/schema/) validam e serializam dados (Pydantic).
+5. Templates + static servem a interface web (Jinja2).
 
-## Como rodar localmente
-1. Criar e ativar virtualenv (ex. venv)
+## Como rodar localmente (passo a passo)
+1. Criar e ativar virtualenv:
+```sh
+python -m venv .venv
+.\.venv\Scripts\activate
+```
 2. Instalar dependências:
 ```sh
 pip install -r requirements.txt
 ```
-3. Configurar `.env` (já existe em [`.env`](.env))
-4. Rodar migrações Alembic (opcional / quando houver DB configurado):
+3. Configurar variáveis em `.env` (ex.: DATABASE_URL, SECRET_KEY).
+4. Rodar migrações Alembic:
 ```sh
 alembic upgrade head
 ```
-(arquivo de migrations: [alembic/versions/aaab08ca480d_initial_tables.py](alembic/versions/aaab08ca480d_initial_tables.py))
-
-5. Iniciar servidor:
+5. Iniciar aplicação:
 ```sh
 uvicorn main:app --reload
 ```
 
-Rotas HTML principais:
-- Página de cadastro: GET /alunos/cadastro (implementada em [app/routes/aluno_routes.py](app/routes/aluno_routes.py))
-- Login: GET /login (ver [app/routes/login_routes.py](app/routes/login_routes.py))
+Com Docker:
+- Build: docker build -t sistemapilates .
+- Run: docker run --env-file .env -p 8000:8000 sistemapilates
 
-API (exemplos):
-- POST /alunos/ — cria um aluno via API (controller: [`AlunoController`](app/controllers/aluno_controller.py))
-- POST /alunos/cadastro/aluno — endpoint usado pelo formulário (ver [app/routes/aluno_routes.py](app/routes/aluno_routes.py))
+## Endpoints principais (exemplos)
+- HTML:
+  - GET /login
+  - GET /alunos/cadastro
+  - GET /agenda
+- API:
+  - POST /api/alunos/ — cria aluno
+  - GET /api/alunos/{id} — obtém aluno
+  - POST /api/agendamentos/ — cria agendamento
 
-## Notas e pontos importantes
-- Conexão com DB configurada em [app/database/connection.py](app/database/connection.py). Use [`get_db`](app/database/connection.py) como dependency nas rotas.
-- Controllers encapsulam regra de negócio e persistência (ex.: [`AlunoController.criar_aluno`](app/controllers/aluno_controller.py)).
-- Schemas Pydantic estão em [app/schema/](app/schema/) e servem para validação/serialização.
-- Alembic está configurado para autogenerate (veja [alembic/env.py](alembic/env.py) que importa `app.models.*`).
+(Ver arquivos em app/routes/ para lista completa de rotas.)
 
-## Contribuição
-- Siga a estrutura: rotas em `app/routes/`, lógica em `app/controllers/`, models em `app/models/`, schemas em `app/schema/`, templates em `app/templates/` e estáticos em `app/static/`.
-- Antes de abrir PR, rode migrações e testes (quando existirem).
+## Notas importantes
+- Conexão com DB: app/database/connection.py — exporta engine, Base, SessionLocal e get_db.
+- Migrações: alembic/ está configurado para importar modelos (ver alembic/env.py).
+- Autenticação: utilitário em app/utils/auth.py (tokens/sessões).
+- Testes: app/tests/ contém unit/integration; execute com pytest.
+- Organização: separar lógica em controllers; rotas apenas expõem e validam entrada via schemas.
 
---- 
+## Como contribuir
+- Siga a estrutura: routes → controllers → models → schema → templates/static.
+- Adicione testes para novas features.
+- Antes do PR: rode pytest e alembic upgrade head.
+
+---
