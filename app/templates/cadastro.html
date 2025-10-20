@@ -65,28 +65,54 @@
 
 
       
-      <form id="form-professor" class="formulario">
-        <fieldset>
-          <legend>Informações do Professor</legend>
+<form id="form-professor" class="formulario">
+  <fieldset>
+    <legend>Informações do Professor</legend>
 
-          <label for="nome-prof">Nome completo</label>
-          <input type="text" id="nome-prof" name="nome-prof" placeholder="Digite o nome do professor" required>
+    <label for="nome-prof">Nome completo</label>
+    <input type="text" id="nome-prof" name="nome" placeholder="Digite o nome do professor" required>
 
-          <label for="email-prof">Email</label>
-          <input type="email" id="email-prof" name="email-prof" placeholder="email@exemplo.com" required>
+    <label for="cref">CREF</label>
+    <input type="text" id="cref" name="cref" placeholder="Número do CREF" required>
 
-          <label for="telefone-prof">Telefone</label>
-          <input type="tel" id="telefone-prof" name="telefone-prof" placeholder="(11)99999-9999" required>
+    <label for="email-prof">Email</label>
+    <input type="email" id="email-prof" name="email" placeholder="email@exemplo.com" required>
 
-          <label for="especialidade">Especialidade</label>
-          <input type="text" id="especialidade" name="especialidade" placeholder="Ex: Pilates Avançado" required>
-        </fieldset>
+    <label for="senha-prof">Senha</label>
+    <input type="password" id="senha-prof" name="senha" placeholder="Digite uma senha" required>
 
-        <div class="form-actions">
-          <button type="button" class="btn cancelar">Cancelar</button>
-          <button type="submit" class="btn salvar">Salvar</button>
-        </div>
-      </form>
+    <label for="telefone-prof">Telefone</label>
+    <input type="tel" id="telefone-prof" name="telefone" placeholder="(11)99999-9999">
+
+    <!-- NOVOS CAMPOS ADICIONADOS -->
+    <label for="identificador">CPF/RG</label>
+    <input type="text" id="identificador" name="identificador" placeholder="Digite CPF ou RG">
+
+    <label for="tipo_identificador">Tipo de Documento</label>
+    <select id="tipo_identificador" name="tipo_identificador">
+      <option value="">Selecione...</option>
+      <option value="cpf">CPF</option>
+      <option value="rg">RG</option>
+      <option value="outro">Outro</option>
+    </select>
+
+    <label for="estudio_id">Estúdio (Opcional)</label>
+    <select id="estudio_id" name="estudio_id">
+      <option value="">Selecione um estúdio...</option>
+      <!-- Opções serão preenchidas via JavaScript -->
+    </select>
+
+    <div class="checkbox-container">
+      <input type="checkbox" id="ativo" name="ativo" checked>
+      <label for="ativo">Professor ativo</label>
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <button type="button" class="btn cancelar">Cancelar</button>
+    <button type="submit" class="btn salvar">Salvar</button>
+  </div>
+</form>
 
       
       <form id="form-estudio" class="formulario">

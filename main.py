@@ -36,6 +36,8 @@ app.add_middleware(
 # =========================================================
 from app.routes import aluno_routes
 app.include_router(aluno_routes.router)
+from app.routes.professor_routes import router as professor_router
+app.include_router(professor_router)
 
 # =========================================================
 # Rotas básicas

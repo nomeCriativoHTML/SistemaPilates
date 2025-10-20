@@ -22,22 +22,26 @@ class Presenca(str, Enum):
 # --- Professor ---
 class ProfessorBase(BaseModel):
     nome: str
+    cref: str 
     email: EmailStr
     senha: str
     identificador: Optional[str] = None
     tipo_identificador: Optional[TipoIdentificador] = None
     ativo: Optional[bool] = True
+    estudio_id: Optional[int] = None 
 
 class ProfessorCreate(ProfessorBase):
     pass
 
 class ProfessorUpdate(BaseModel):
     nome: Optional[str] = None
+    cref: Optional[str] = None  
     email: Optional[EmailStr] = None
     senha: Optional[str] = None
     identificador: Optional[str] = None
     tipo_identificador: Optional[TipoIdentificador] = None
     ativo: Optional[bool] = None
+    estudio_id: Optional[int] = None 
 
 class ProfessorOut(ProfessorBase):
     id: int
