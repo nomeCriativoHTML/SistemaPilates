@@ -10,7 +10,6 @@ Sistema web leve usando FastAPI + Jinja2 para gerenciar alunos, professores, est
 - .env
 - requirements.txt
 - alembic.ini
-- Dockerfile
 - main.py
 - alembic/
   - env.py
@@ -93,16 +92,6 @@ Sistema web leve usando FastAPI + Jinja2 para gerenciar alunos, professores, est
       - agendamento.css
       - evolucao.css
     - images/
-  - utils/
-    - __init__.py
-    - auth.py
-    - helpers.py
-  - tests/
-    - __init__.py
-    - test_models.py
-    - test_controllers.py
-    - test_routes.py
-    - test_integration.py
 
 ## Fluxo e responsabilidades
 1. Rotas (app/routes/) recebem requisições e injetam dependências (get_db).
