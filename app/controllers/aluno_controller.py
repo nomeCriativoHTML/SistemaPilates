@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.utils.security import hash_senha
 from app.models.aluno import Aluno
-from app.schema.aluno import AlunoCreate, AlunoUpdate  # observe o nome correto do arquivo schema
+from app.schema.aluno import AlunoCreate, AlunoUpdate
 
 class AlunoController:
 
@@ -18,13 +18,13 @@ class AlunoController:
                 detail="Aluno com CPF ou email já cadastrado."
             )
 
-        # Criar novo aluno
+        # Criar novo aluno com hash SHA-256
         novo_aluno = Aluno(
             nome=aluno.nome,
             cpf=aluno.cpf,
             telefone=aluno.telefone,
             email=aluno.email,
-            senha=aluno.senha,  
+            senha=hash_senha(aluno.senha),
             data_nascimento=aluno.data_nascimento,
             status_pagamento=aluno.status_pagamento
         )
@@ -57,7 +57,10 @@ class AlunoController:
                 detail="Aluno não encontrado."
             )
 
-        update_data = aluno_data.model_dump(exclude_unset=True)  # para compatibilidade com Pydantic v2
+        update_data = aluno_data.model_dump(exclude_unset=True)
+        if "senha" in update_data:
+            update_data["senha"] = hash_senha(update_data["senha"])
+
         for key, value in update_data.items():
             setattr(aluno, key, value)
 
@@ -77,3 +80,4 @@ class AlunoController:
         db.delete(aluno)
         db.commit()
         return {"mensagem": f"Aluno {aluno.nome} excluído com sucesso."}
+

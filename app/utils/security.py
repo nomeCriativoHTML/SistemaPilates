@@ -1,14 +1,9 @@
-from passlib.context import CryptContext
-
-# Configuração do CryptContext
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import hashlib
 
 def hash_senha(senha: str) -> str:
-    """Gera o hash da senha com truncamento para 72 bytes"""
-    senha_truncada = senha[:72]  # Trunca a senha se for maior que 72 caracteres
-    return pwd_context.hash(senha_truncada)
+    """Criptografa a senha usando SHA-256."""
+    return hashlib.sha256(senha.encode('utf-8')).hexdigest()
 
-def verificar_senha(senha: str, hash: str) -> bool:
-    """Verifica se a senha corresponde ao hash"""
-    senha_truncada = senha[:72]  # Trunca a senha também na verificação
-    return pwd_context.verify(senha_truncada, hash)
+def verificar_senha(senha: str, senha_hash: str) -> bool:
+    """Verifica se a senha fornecida corresponde ao hash armazenado."""
+    return hash_senha(senha) == senha_hash

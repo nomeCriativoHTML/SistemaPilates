@@ -15,7 +15,6 @@ python-multipart
 cryptography
 PyJWT==2.8.0
 itsdangerous==2.1.2
-passlib[bcrypt]
 
 # --- Testes e utilitários ---
 pytest==8.2.1
