@@ -139,33 +139,60 @@ document.getElementById('form-estudio').addEventListener('submit', async functio
     // TODO: Implementar lógica para cadastro de estúdio
     alert('Funcionalidade de cadastro de estúdio em desenvolvimento!');
 });
+// --- Máscaras CPF e Telefone (melhoradas e com limite) ---
 
-// --- Máscara telefone ---
+// Função de máscara de telefone com limitação
 function mascaraTelefone(input) {
-    const texto = input.value.replace(/\D/g, '');
-    if (texto.length === 11) {
-        input.value = texto.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-    } else if (texto.length === 10) {
-        input.value = texto.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $3-$4');
+    let valor = input.value.replace(/\D/g, '').slice(0, 11); // permite até 11 dígitos
+    if (valor.length <= 10) {
+        // formato fixo (10 dígitos)
+        input.value = valor.replace(/^(\d{0,2})(\d{0,4})(\d{0,4})$/, function(_, ddd, p1, p2) {
+            return `${ddd ? '(' + ddd : ''}${p1 ? ') ' + p1 : ''}${p2 ? '-' + p2 : ''}`;
+        });
+    } else {
+        // formato celular (11 dígitos)
+        input.value = valor.replace(/^(\d{0,2})(\d{0,5})(\d{0,4})$/, function(_, ddd, p1, p2) {
+            return `${ddd ? '(' + ddd : ''}${p1 ? ') ' + p1 : ''}${p2 ? '-' + p2 : ''}`;
+        });
     }
 }
 
-document.querySelectorAll('input[type="tel"]').forEach(input =>
-    input.addEventListener('input', e => mascaraTelefone(e.target))
-);
-
-// --- Máscara CPF para aluno ---
+// Função de máscara de CPF com limitação
 function mascaraCPF(input) {
-    const texto = input.value.replace(/\D/g, '');
-    if (texto.length <= 11) {
-        input.value = texto.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    }
+    let valor = input.value.replace(/\D/g, '').slice(0, 11); // permite até 11 dígitos
+    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+    valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    input.value = valor;
 }
 
-// Aplicar máscara de CPF no campo do aluno
+// Aplicar a máscara de telefone a todos os inputs de telefone
+document.querySelectorAll('input[type="tel"]').forEach(input => {
+    input.addEventListener('input', e => mascaraTelefone(e.target));
+});
+
+// Aplicar máscara de CPF ao campo do aluno
 const cpfInput = document.getElementById('cpf');
 if (cpfInput) {
     cpfInput.addEventListener('input', e => mascaraCPF(e.target));
+}
+
+// Aplicar máscara de CPF ao identificador do professor quando o tipo for CPF
+const identificadorInput = document.getElementById('identificador');
+const tipoIdentificador = document.getElementById('tipo_identificador');
+if (identificadorInput && tipoIdentificador) {
+    identificadorInput.addEventListener('input', e => {
+        if (tipoIdentificador.value === 'cpf') {
+            mascaraCPF(e.target);
+        } else {
+            // Se for RG ou outro, só números, sem formatação
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 15);
+        }
+    });
+
+    tipoIdentificador.addEventListener('change', () => {
+        identificadorInput.value = ''; // limpa quando troca o tipo
+    });
 }
 
 // --- Carregar estúdios para o select (opcional) ---
@@ -199,3 +226,4 @@ async function carregarEstudios() {
 document.addEventListener('DOMContentLoaded', function() {
     carregarEstudios();
 });
+
