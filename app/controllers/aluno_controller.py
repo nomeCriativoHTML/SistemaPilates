@@ -24,7 +24,7 @@ class AlunoController:
             cpf=aluno.cpf,
             telefone=aluno.telefone,
             email=aluno.email,
-            senha=hash_senha(aluno.senha),  
+            senha=aluno.senha,  
             data_nascimento=aluno.data_nascimento,
             status_pagamento=aluno.status_pagamento
         )

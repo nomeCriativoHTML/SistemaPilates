@@ -12,7 +12,7 @@ python-dotenv==1.0.0
 jinja2==3.1.2
 python-multipart
 # --- Segurança e autenticação ---
-
+cryptography
 PyJWT==2.8.0
 itsdangerous==2.1.2
 passlib[bcrypt]
