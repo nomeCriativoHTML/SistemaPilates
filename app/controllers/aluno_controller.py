@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+from app.utils.security import hash_senha
 from app.models.aluno import Aluno
 from app.schema.aluno import AlunoCreate, AlunoUpdate  # observe o nome correto do arquivo schema
 
@@ -23,7 +24,7 @@ class AlunoController:
             cpf=aluno.cpf,
             telefone=aluno.telefone,
             email=aluno.email,
-            senha=aluno.senha,  # futuramente você pode hashear a senha
+            senha=hash_senha(aluno.senha),  
             data_nascimento=aluno.data_nascimento,
             status_pagamento=aluno.status_pagamento
         )
