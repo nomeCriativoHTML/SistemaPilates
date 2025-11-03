@@ -115,9 +115,48 @@ document.getElementById('form-professor').addEventListener('submit', async funct
 });
 
 // --- Submit do formulário de estúdio ---
+// --- Submit do formulário de estúdio ---
 document.getElementById('form-estudio').addEventListener('submit', async function(e) {
     e.preventDefault();
-    alert('Funcionalidade de cadastro de estúdio em desenvolvimento!');
+
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    // Montar payload para envio
+    const payload = {
+        nome: data.nome,
+        endereco: data.endereco,
+        cep: data.cep,
+        telefone: data.telefone || null,
+        email: data.email || null,
+        capacidade_maxima: data.capacidade_maxima ? parseInt(data.capacidade_maxima) : 3
+    };
+
+    // Validação básica
+    if (!payload.nome || !payload.endereco || !payload.cep) {
+        alert('Preencha todos os campos obrigatórios!');
+        return;
+    }
+
+    try {
+        const response = await fetch('/estudios/cadastro/estudio', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Estúdio cadastrado com sucesso!');
+            this.reset();
+        } else {
+            alert('Erro: ' + (result.error || 'Tente novamente.'));
+        }
+    } catch (error) {
+        console.error('Erro completo:', error);
+        alert('Erro ao cadastrar estúdio. Verifique sua conexão.');
+    }
 });
 
 // --- Submit do formulário de atendimento (novo admin) ---
@@ -198,20 +237,22 @@ if (identificadorInput && tipoIdentificador) {
     tipoIdentificador.addEventListener('change', () => (identificadorInput.value = ''));
 }
 
-// --- Carregar estúdios (mock) ---
+// --- Carregar estúdios reais via API ---
 async function carregarEstudios() {
     try {
-        const estudios = [
-            { id: 1, nome: 'Estúdio Central' },
-            { id: 2, nome: 'Estúdio Zona Sul' }
-        ];
+        const response = await fetch('/estudios/'); // Faz a requisição para o endpoint de estúdios
+        if (!response.ok) throw new Error('Falha ao carregar estúdios');
 
+        const estudios = await response.json(); // Converte a resposta em JSON
         const select = document.getElementById('estudio_id');
         if (select) {
+            // Limpa opções antigas, mantendo a primeira (placeholder)
+            select.options.length = 1;
+
             estudios.forEach(estudio => {
                 const option = document.createElement('option');
-                option.value = estudio.id;
-                option.textContent = estudio.nome;
+                option.value = estudio.id;       // valor do option = id do estúdio
+                option.textContent = estudio.nome; // texto do option = nome do estúdio
                 select.appendChild(option);
             });
         }

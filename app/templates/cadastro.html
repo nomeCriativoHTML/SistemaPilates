@@ -124,13 +124,22 @@
           <legend>Informações do Estúdio</legend>
 
           <label for="nome-estudio">Nome do Estúdio</label>
-          <input type="text" id="nome-estudio" name="nome-estudio" placeholder="Digite o nome do estúdio" required>
+          <input type="text" id="nome-estudio" name="nome" placeholder="Digite o nome do estúdio" required>
 
           <label for="endereco">Endereço</label>
           <input type="text" id="endereco" name="endereco" placeholder="Rua Exemplo, 123" required>
 
+          <label for="cep">CEP</label>
+          <input type="text" id="cep" name="cep" placeholder="12345-678" pattern="\d{5}-\d{3}" required>
+
           <label for="telefone-estudio">Telefone</label>
-          <input type="tel" id="telefone-estudio" name="telefone-estudio" placeholder="(11)99999-9999" required>
+          <input type="tel" id="telefone-estudio" name="telefone" placeholder="(11)99999-9999">
+
+          <label for="email-estudio">Email</label>
+          <input type="email" id="email-estudio" name="email" placeholder="contato@studiopilates.com">
+
+          <label for="capacidade-maxima">Capacidade Máxima</label>
+          <input type="number" id="capacidade-maxima" name="capacidade_maxima" min="1" value="3">
         </fieldset>
 
         <div class="form-actions">
@@ -138,6 +147,7 @@
           <button type="submit" class="btn salvar">Salvar</button>
         </div>
       </form>
+
 
       <!-- Formulário Atendimento (Admin) -->
       <form id="form-atendimento" class="formulario">

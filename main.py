@@ -34,10 +34,15 @@ app.add_middleware(
 # =========================================================
 # Importação e inclusão de rotas
 # =========================================================
-from app.routes import aluno_routes
+from app.routes import aluno_routes 
 app.include_router(aluno_routes.router)
+
 from app.routes.professor_routes import router as professor_router
 app.include_router(professor_router)
+
+from app.routes.estudio_routes import router as estudio_router
+app.include_router(estudio_router)
+
 
 # =========================================================
 # Rotas básicas
