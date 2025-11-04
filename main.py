@@ -46,6 +46,9 @@ app.include_router(estudio_router)
 from app.routes.admin_routes import router as admin_router
 app.include_router(admin_router)
 
+from app.routes.login.aluno_login import router as aluno_login_router
+app.include_router(aluno_login_router)  # <<< login de alunos
+
 
 # =========================================================
 # Rotas básicas
@@ -53,7 +56,7 @@ app.include_router(admin_router)
 @app.get("/", include_in_schema=False)
 async def root():
     """Redireciona para a página de cadastro"""
-    return RedirectResponse(url="/alunos/cadastro")
+    return RedirectResponse(url="/login/")
 
 # =========================================================
 # Inicialização do servidor

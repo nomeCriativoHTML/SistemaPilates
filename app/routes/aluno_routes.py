@@ -66,6 +66,13 @@ async def criar_aluno_form(request: Request, db: Session = Depends(get_db)):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+#RENDERIZA A PAGINA DE ALUNOS APOS O LOGIN
+@router.get("/aluno", response_class=HTMLResponse)
+async def pagina_aluno(request: Request):
+    """
+    Página principal do aluno após login.
+    """
+    return templates.TemplateResponse("aluno.html", {"request": request})
 # =====================================================
 # ENDPOINTS RESTFUL (API)
 # =====================================================
