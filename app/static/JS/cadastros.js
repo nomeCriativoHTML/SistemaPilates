@@ -168,13 +168,14 @@ if (formAtendimento) {
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
 
-        const payload = {
+       const payload = {
             nome: data.nome,
             email: data.email,
             senha: data.senha,
-            telefone: data.telefone || null,
-            cargo: data.cargo || 'Admin'
+            ativo: data.ativo === "true",
+            tipo_admin: data.tipo_admin
         };
+
 
         try {
             const response = await fetch('/admins/cadastro', {
@@ -196,6 +197,7 @@ if (formAtendimento) {
         }
     });
 }
+
 
 // --- Máscaras CPF e Telefone ---
 function mascaraTelefone(input) {

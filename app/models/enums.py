@@ -31,6 +31,5 @@ class Status(enum.Enum):
     pendente = "pendente"
 
 class TipoAdmin(enum.Enum):
-    admin_completo = "admin_completo"
+    pleno = "admin_pleno"
     recepcionista = "recepcionista"
-    financeiro = "financeiro"

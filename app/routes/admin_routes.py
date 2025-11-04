@@ -1,66 +1,80 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Request, Depends, HTTPException, status
+from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
+
 from app.database.connection import get_db
-from app.controllers.admin_controller import (
-    create_aluno, list_alunos, update_aluno, delete_aluno,
-    create_professor, list_professores, update_professor, delete_professor,
-    create_estudio, list_estudios, update_estudio, delete_estudio
+from app.controllers.admin_controller import AdminController
+from app.schema.admin import AdminCreate, AdminUpdate
+
+from fastapi.templating import Jinja2Templates
+templates = Jinja2Templates(directory="app/templates")
+
+router = APIRouter(
+    prefix="/admins",
+    tags=["Admins / Recepção"]
 )
-from app.schema.admin import (
-    GestaoDeAlunosCreate, GestaoDeAlunosUpdate,
-    GestaoDeProfessoresCreate, GestaoDeProfessoresUpdate,
-    GestaoDeEstudosCreate, GestaoDeEstudosUpdate
-)
 
-router = APIRouter()
+# =====================================================
+# PÁGINAS HTML
+# =====================================================
 
-# ===== ROTAS PARA ALUNOS =====
-@router.post("/alunos/")
-def criar_aluno(aluno: GestaoDeAlunosCreate, db: Session = Depends(get_db)):
-    return create_aluno(db, aluno)
+@router.get("/cadastro", response_class=HTMLResponse)
+async def pagina_cadastro_admin(request: Request, success: bool = False, error: str = None):
+    return templates.TemplateResponse(
+        "cadastro.html",
+        {"request": request, "success": success, "error": error}
+    )
 
-@router.get("/alunos/")
-def listar_alunos(db: Session = Depends(get_db)):
-    return list_alunos(db)
+# =====================================================
+# FORM POST VIA FRONT-END
+# =====================================================
 
-@router.put("/alunos/{aluno_id}")
-def atualizar_aluno(aluno_id: int, aluno: GestaoDeAlunosUpdate, db: Session = Depends(get_db)):
-    return update_aluno(db, aluno_id, aluno)
+@router.post("/cadastro")
+async def criar_admin_form(request: Request, db: Session = Depends(get_db)):
+    try:
+        data = await request.json()
 
-@router.delete("/alunos/{aluno_id}")
-def excluir_aluno(aluno_id: int, db: Session = Depends(get_db)):
-    return delete_aluno(db, aluno_id)
+        admin_data = AdminCreate(
+            nome=data.get("nome"),
+            email=data.get("email"),
+            senha=data.get("senha"),
+            tipo_admin=data.get("tipo_admin"),   
+            status=data.get("status", "ativo")
+        )
 
-# ===== ROTAS PARA PROFESSORES =====
-@router.post("/professores/")
-def criar_professor(professor: GestaoDeProfessoresCreate, db: Session = Depends(get_db)):
-    return create_professor(db, professor)
+        AdminController.criar_admin(db, admin_data)
 
-@router.get("/professores/")
-def listar_professores(db: Session = Depends(get_db)):
-    return list_professores(db)
+        return JSONResponse(
+            {"message": "Administrador cadastrado com sucesso!"},
+            status_code=status.HTTP_201_CREATED
+        )
 
-@router.put("/professores/{professor_id}")
-def atualizar_professor(professor_id: int, professor: GestaoDeProfessoresUpdate, db: Session = Depends(get_db)):
-    return update_professor(db, professor_id, professor)
+    except HTTPException as e:
+        return JSONResponse({"error": e.detail}, status_code=e.status_code)
 
-@router.delete("/professores/{professor_id}")
-def excluir_professor(professor_id: int, db: Session = Depends(get_db)):
-    return delete_professor(db, professor_id)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
 
-# ===== ROTAS PARA ESTÚDIOS =====
-@router.post("/estudios/")
-def criar_estudio(estudio: GestaoDeEstudosCreate, db: Session = Depends(get_db)):
-    return create_estudio(db, estudio)
+# =====================================================
+# API REST
+# =====================================================
 
-@router.get("/estudios/")
-def listar_estudios(db: Session = Depends(get_db)):
-    return list_estudios(db)
+@router.post("/", status_code=status.HTTP_201_CREATED)
+def criar_admin_api(admin: AdminCreate, db: Session = Depends(get_db)):
+    return AdminController.criar_admin(db, admin)
 
-@router.put("/estudios/{estudio_id}")
-def atualizar_estudio(estudio_id: int, estudio: GestaoDeEstudosUpdate, db: Session = Depends(get_db)):
-    return update_estudio(db, estudio_id, estudio)
+@router.get("/")
+def listar_admins(db: Session = Depends(get_db)):
+    return AdminController.listar_admins(db)
 
-@router.delete("/estudios/{estudio_id}")
-def excluir_estudio(estudio_id: int, db: Session = Depends(get_db)):
-    return delete_estudio(db, estudio_id)
+@router.get("/{admin_id}")
+def obter_admin(admin_id: int, db: Session = Depends(get_db)):
+    return AdminController.obter_admin(db, admin_id)
+
+@router.put("/{admin_id}")
+def atualizar_admin(admin_id: int, admin_data: AdminUpdate, db: Session = Depends(get_db)):
+    return AdminController.atualizar_admin(db, admin_id, admin_data)
+
+@router.delete("/{admin_id}", status_code=status.HTTP_204_NO_CONTENT)
+def excluir_admin(admin_id: int, db: Session = Depends(get_db)):
+    return AdminController.excluir_admin(db, admin_id)

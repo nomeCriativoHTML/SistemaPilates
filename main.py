@@ -43,6 +43,9 @@ app.include_router(professor_router)
 from app.routes.estudio_routes import router as estudio_router
 app.include_router(estudio_router)
 
+from app.routes.admin_routes import router as admin_router
+app.include_router(admin_router)
+
 
 # =========================================================
 # Rotas básicas

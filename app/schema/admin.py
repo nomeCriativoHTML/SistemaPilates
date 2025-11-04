@@ -9,9 +9,8 @@ from decimal import Decimal
 # ====================================================
 
 class TipoAdmin(str, Enum):
-    admin_pleno = "admin_pleno"
+    pleno = "admin_pleno"
     recepcionista = "recepcionista"
-    coordenador = "coordenador"
 
 class Status(str, Enum):
     ativo = "ativo"

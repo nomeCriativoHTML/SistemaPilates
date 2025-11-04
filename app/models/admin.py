@@ -13,8 +13,9 @@ class Admin(Base):
     nome = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     senha = Column(String(100), nullable=False)
-    tipo_admin = Column(Enum(TipoAdmin), default=TipoAdmin.recepcionista, nullable=False)
+    tipo_admin = Column(String(30), nullable=False, default="recepcionista")
     ativo = Column(Boolean, default=True)
+
 
     # Relacionamentos
     logs = relationship("LogDoSistema", back_populates="admin", cascade="all, delete-orphan")
