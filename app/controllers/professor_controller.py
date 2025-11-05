@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+from app.utils.security import hash_senha
 from app.models.professor import Professor
 from app.schema.professor import ProfessorCreate, ProfessorUpdate
 
@@ -43,7 +44,7 @@ class ProfessorController:
             nome=professor.nome,
             cref=professor.cref,
             email=professor.email,
-            senha=professor.senha,
+            senha=hash_senha(professor.senha),
             identificador=professor.identificador,
             tipo_identificador=professor.tipo_identificador,
             ativo=professor.ativo,
