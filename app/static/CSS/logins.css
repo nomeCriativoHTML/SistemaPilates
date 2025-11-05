@@ -126,7 +126,6 @@ body{
 .esqueci-senha:hover {
     text-decoration: underline;
 }
-
 .user-types{
     margin-top: 25px;
     text-align: center;
@@ -143,11 +142,11 @@ body{
     justify-content: space-between;
 }
 
-.user-types button{
+.user-btn{
     background: #ecf0f1;
     border: none;
     border-radius: 6px;
-    padding: 10px;
+    padding: 12px;
     flex: 1;
     margin: 0 5px;
     cursor: pointer;
@@ -155,31 +154,42 @@ body{
     flex-direction: column;
     align-items: center;
     color: #2c3e50;
+    transition: all .25s ease-in-out;
 }
 
-.user-btn.active {
-    background-color: #4E73DF;
-    color: white;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-
-.user-types button i{
+.user-btn i{
     font-size: 20px;
     margin-bottom: 5px;
 }
 
-.user-types button:hover{
+/* Efeito hover quando NÃO está ativo */
+.user-btn:hover:not(.active){
     background: #dcdde1;
+    transform: scale(1.03);
 }
 
+/* Botão ativo (selecionado) */
+.user-btn.active {
+    background-color: #2c3e50;
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    transform: scale(1.07);
+}
+
+/* Ícones dentro do botão ativo */
+.user-btn.active i{
+    color: white;
+}
+
+/* Rodapé */
 .login-footer{
     margin-top: 20px;
     text-align: center;
     font-size: 12px;
     color: #95a5a6;
 }
+
 
 
 /*responsividade*/
