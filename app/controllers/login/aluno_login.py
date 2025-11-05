@@ -8,7 +8,7 @@ class AlunoLoginController:
 
     @staticmethod
     def login_aluno(db: Session, dados: AlunoLogin):
-        # 1️⃣ Verificar se o aluno existe
+        #  Verificar se o aluno existe
         aluno = db.query(Aluno).filter(Aluno.email == dados.email).first()
         if not aluno:
             raise HTTPException(
@@ -16,17 +16,17 @@ class AlunoLoginController:
                 detail="Email não cadastrado."
             )
 
-        # 2️⃣ Verificar senha
+        #  Verificar senha
         if not verify_senha(dados.senha, aluno.senha):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Senha incorreta."
             )
 
-        # 3️⃣ Gerar token JWT
+        #  Gerar token JWT
         token = create_access_token({"sub": aluno.email, "id": aluno.id})
 
-        # 4️⃣ Retornar dados seguros
+        # Retornar dados seguros
         return {
             "mensagem": "Login realizado com sucesso.",
             "aluno_id": aluno.id,

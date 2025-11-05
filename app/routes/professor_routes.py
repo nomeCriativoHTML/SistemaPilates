@@ -24,7 +24,7 @@ async def pagina_cadastro_professor(request: Request, success: bool = False, err
     Pode exibir mensagem de sucesso/erro após submissão do formulário.
     """
     return templates.TemplateResponse(
-        "professor.html",  # Usando o template professor.html que já existe
+        "cadastro.html",  
         {"request": request, "success": success, "error": error}
     )
 

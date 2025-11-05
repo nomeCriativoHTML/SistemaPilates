@@ -49,6 +49,9 @@ app.include_router(admin_router)
 from app.routes.login.aluno_login import router as aluno_login_router
 app.include_router(aluno_login_router)  # <<< login de alunos
 
+from app.routes.login.professor_login import router as professor_login_router
+app.include_router(professor_login_router) 
+
 
 # =========================================================
 # Rotas básicas
