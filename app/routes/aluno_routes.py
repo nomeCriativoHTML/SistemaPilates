@@ -73,6 +73,15 @@ async def pagina_aluno(request: Request):
     Página principal do aluno após login.
     """
     return templates.TemplateResponse("aluno.html", {"request": request})
+
+
+@router.get("/agenda", response_class=HTMLResponse)
+async def pagina_agenda(request: Request):
+    """
+    Página de agenda do aluno.
+    """
+    return templates.TemplateResponse("agenda.html", {"request": request})
+
 # =====================================================
 # ENDPOINTS RESTFUL (API)
 # =====================================================

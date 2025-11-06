@@ -5,6 +5,22 @@ const userButtons = document.querySelectorAll(".user-btn");
 
 let tipoLogin = null;
 
+// Função para mostrar mensagens estilizadas
+function showMessage(text, type = "success", duration = 3000) {
+    const container = document.getElementById("message-container");
+    container.innerHTML = `<div class="message ${type}">${text}</div>`;
+    const messageEl = container.querySelector(".message");
+
+    // Força animação
+    setTimeout(() => messageEl.classList.add("show"), 10);
+
+    // Sumir depois de X segundos
+    setTimeout(() => {
+        messageEl.classList.remove("show");
+        setTimeout(() => container.innerHTML = "", 500);
+    }, duration);
+}
+
 // Selecionar tipo de usuário
 userButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -31,7 +47,7 @@ loginForm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     if (!tipoLogin) {
-        alert("Escolha o tipo de usuário.");
+        showMessage("Escolha o tipo de usuário.", "error");
         return;
     }
 
@@ -39,7 +55,7 @@ loginForm.addEventListener('submit', async function(e) {
     const password = passwordInput.value;
 
     if (!email || !password) {
-        alert('Preencha todos os campos!');
+        showMessage('Preencha todos os campos!', "error");
         return;
     }
 
@@ -55,23 +71,25 @@ loginForm.addEventListener('submit', async function(e) {
         const result = await response.json();
 
         if (!response.ok) {
-            alert(result.error || "Credenciais inválidas");
+            showMessage(result.error || "Credenciais inválidas", "error");
             return;
         }
 
-        alert(result.message || "Login realizado!");
+        showMessage(result.message || "Login realizado!", "success");
 
-        // Rotas corretas para redirecionamento
-        if (tipoLogin === "aluno") {
-            window.location.href = "/login/aluno";
-        } else if (tipoLogin === "professor") {
-            window.location.href = "/login/professor/dashboard";
-        } else if (tipoLogin === "admin") {
-            window.location.href = "/login/admin";
-        }
+        // Redireciona após 1,5s para a rota correta
+        setTimeout(() => {
+            if (tipoLogin === "aluno") {
+                window.location.href = "/login/aluno";
+            } else if (tipoLogin === "professor") {
+                window.location.href = "/login/professor/dashboard";
+            } else if (tipoLogin === "admin") {
+                window.location.href = "/login/admin";
+            }
+        }, 1500);
 
     } catch (error) {
         console.error("Erro ao fazer login:", error);
-        alert("Erro inesperado. Tente novamente.");
+        showMessage("Erro inesperado. Tente novamente.", "error");
     }
 });
