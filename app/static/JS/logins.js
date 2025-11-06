@@ -67,7 +67,7 @@ loginForm.addEventListener('submit', async function(e) {
         } else if (tipoLogin === "professor") {
             window.location.href = "/login/professor/dashboard";
         } else if (tipoLogin === "admin") {
-            window.location.href = "/admin/dashboard";
+            window.location.href = "/login/admin";
         }
 
     } catch (error) {

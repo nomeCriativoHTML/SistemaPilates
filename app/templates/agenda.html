@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda</title>
-    <link rel="stylesheet" href="/app/static/CSS/agenda.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/CSS/agenda.css') }}?v={{ time }}">
     <link rel="icon" href="/app/static/img/img-tela-login.jpg" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -127,6 +127,6 @@
             </button>
         </footer>
 
-    <script src="/app/static/JS/agenda.js"></script>
+    <script src="{{ url_for('static', path='/JS/agenda.js') }}?v={{ time }}"></script>
 </body>
 </html>
