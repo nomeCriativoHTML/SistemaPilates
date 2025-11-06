@@ -1,10 +1,12 @@
 :root {
   --cor-primaria: #111827;
   --cor-secundaria: #f3f4f6;
-  --cor-destaque: #2563eb;
+  --cor-destaque: #2c3e50;
   --cor-borda: #d1d5db;
+  --cor-borda-escura: #9ca3af;
 }
 
+/* ---------- RESET ---------- */
 * {
   margin: 0;
   padding: 0;
@@ -13,8 +15,8 @@
 }
 
 body {
-  background: #f3f4f6;
-  color: #111;
+  background: var(--cor-secundaria);
+  color: var(--cor-primaria);
   line-height: 1.5;
 }
 
@@ -22,50 +24,58 @@ body {
 header.topbar {
   display: flex;
   align-items: center;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   background: #fff;
   border-bottom: 1px solid var(--cor-borda);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 header.topbar h1 {
   flex: 1;
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  color: var(--cor-primaria);
 }
 
 .btn-voltar {
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   cursor: pointer;
+  color: var(--cor-primaria);
 }
 
 /* ---------- CATEGORIA (TABS) ---------- */
 .categoria-container {
-  margin: 1.5rem auto;
-  max-width: 700px;
+  margin: 2rem auto 1rem auto;
+  max-width: 900px;
   text-align: center;
+  padding: 0 1rem;
 }
 
 .categoria-container h2 {
   margin-bottom: 1rem;
   color: var(--cor-primaria);
+  font-size: 1.2rem;
 }
 
 .categoria-lista {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .categoria-item {
   background: #fff;
-  border: 1px solid var(--cor-borda);
+  border: 1px solid var(--cor-borda-escura);
   border-radius: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.85rem 1.5rem;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: 0.3s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -74,6 +84,7 @@ header.topbar h1 {
 
 .categoria-item:hover {
   background: var(--cor-secundaria);
+  transform: translateY(-2px);
 }
 
 .categoria-item.ativo {
@@ -83,13 +94,20 @@ header.topbar h1 {
 }
 
 /* ---------- FORMULÁRIOS ---------- */
+.form-container {
+  max-width: 700px;
+  margin: 0 auto 2rem auto;
+  padding: 0 1rem;
+}
+
 .formulario {
   display: none;
   background: #fff;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 0.75rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
 }
 
 .formulario.ativo {
@@ -101,30 +119,39 @@ form fieldset {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 3rem;
-  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 form legend {
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
+  color: var(--cor-primaria);
 }
 
 label {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   margin-bottom: 0.3rem;
 }
 
 input,
 select {
-  padding: 0.8rem;
-  border: 1px solid var(--cor-borda);
+  padding: 0.85rem;
+  border: 1px solid var(--cor-borda-escura);
   border-radius: 0.5rem;
   font-size: 1rem;
   width: 100%;
+  transition: border 0.3s ease;
 }
 
-/* Checkbox alinhado */
+input:focus,
+select:focus {
+  border-color: var(--cor-destaque);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Checkbox */
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -136,43 +163,62 @@ select {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .btn {
   flex: 1;
-  padding: 0.8rem;
+  padding: 0.9rem 1rem;
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .btn.cancelar {
   background: var(--cor-secundaria);
-  color: #111;
+  color: var(--cor-primaria);
+  border: 1px solid var(--cor-borda-escura);
 }
 
 .btn.salvar {
-  background: var(--cor-primaria);
+  background: var(--cor-destaque);
   color: #fff;
+  box-shadow: 0 3px 6px rgba(37, 99, 235, 0.3);
 }
 
 .btn:hover {
-  opacity: 0.9;
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 /* ---------- RESPONSIVIDADE ---------- */
 @media (min-width: 768px) {
-  .form-container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
   .categoria-lista {
     justify-content: space-around;
   }
+
+  .form-actions {
+    justify-content: flex-end;
+  }
+
+  .btn {
+    flex: none;
+    min-width: 120px;
+  }
 }
+
+@media (min-width: 1024px) {
+  .form-container {
+    max-width: 800px;
+  }
+
+  .formulario {
+    padding: 2.5rem;
+  }
+}
+
 
 
 
