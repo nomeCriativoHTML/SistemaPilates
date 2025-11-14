@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from app.schema.aluno import AlunoUpdate
+from app.schema.professor import ProfessorUpdate
+from app.schema.estudio import EstudioUpdate
 from app.database.connection import get_db
 from app.models.aluno import Aluno
 from app.models.professor import Professor
@@ -79,3 +81,113 @@ def api_pagamentos_atrasados(db: Session = Depends(get_db)):
         }
         for a in atrasados
     ]
+
+# ================================
+# EXCLUIR ALUNO
+# ================================
+@router.delete("/aluno/{id}")
+def excluir_aluno(id: int, db: Session = Depends(get_db)):
+    aluno = db.query(Aluno).filter(Aluno.id == id).first()
+
+    if not aluno:
+        return {"erro": "Aluno não encontrado"}
+
+    db.delete(aluno)
+    db.commit()
+    return {"mensagem": "Aluno excluído com sucesso"}
+
+
+# ================================
+# EXCLUIR PROFESSOR
+# ================================
+@router.delete("/professor/{id}")
+def excluir_professor(id: int, db: Session = Depends(get_db)):
+    professor = db.query(Professor).filter(Professor.id == id).first()
+
+    if not professor:
+        return {"erro": "Professor não encontrado"}
+
+    db.delete(professor)
+    db.commit()
+    return {"mensagem": "Professor excluído com sucesso"}
+
+# ================================
+# EXCLUIR ESTÚDIO
+# ================================
+@router.delete("/estudio/{id}")
+def excluir_estudio(id: int, db: Session = Depends(get_db)):
+    estudio = db.query(Estudio).filter(Estudio.id == id).first()
+
+    if not estudio:
+        return {"erro": "Estúdio não encontrado"}
+
+    db.delete(estudio)
+    db.commit()
+    return {"mensagem": "Estúdio excluído com sucesso"}
+
+
+# ================================
+# EDITAR ALUNO
+# ================================
+@router.put("/aluno/{id}")
+def editar_aluno(id: int, dados: AlunoUpdate, db: Session = Depends(get_db)):
+    aluno = db.query(Aluno).filter(Aluno.id == id).first()
+
+    if not aluno:
+        raise HTTPException(status_code=404, detail="Aluno não encontrado")
+
+    for campo, valor in dados.dict(exclude_unset=True).items():
+        setattr(aluno, campo, valor)
+
+    db.commit()
+    db.refresh(aluno)
+
+    return {"mensagem": "Aluno atualizado com sucesso"}
+
+
+# ================================
+# EDITAR PROFESSOR
+# ================================
+
+@router.put("/professor/{id}")
+def editar_professor(
+    id: int,
+    dados: ProfessorUpdate,
+    db: Session = Depends(get_db),
+):
+    professor = db.query(Professor).filter(Professor.id == id).first()
+
+    if not professor:
+        raise HTTPException(status_code=404, detail="Professor não encontrado")
+
+    update_data = dados.model_dump(exclude_unset=True)
+
+    for campo, valor in update_data.items():
+        if hasattr(professor, campo):
+            setattr(professor, campo, valor)
+
+    db.commit()
+    db.refresh(professor)
+
+    return {"mensagem": "Professor atualizado com sucesso"}
+
+
+
+# ================================
+# EDITAR PROFESSOR
+# ================================
+
+@router.put("/estudio/{id}")
+def editar_estudio(id: int, dados: dict, db: Session = Depends(get_db)):
+    estudio = db.query(Estudio).filter(Estudio.id == id).first()
+
+    if not estudio:
+        raise HTTPException(status_code=404, detail="Estúdio não encontrado")
+
+    for campo, valor in dados.items():
+        setattr(estudio, campo, valor)
+
+    db.commit()
+    db.refresh(estudio)
+
+    return {"mensagem": "Estúdio atualizado com sucesso"}
