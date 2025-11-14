@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
+from app.controllers.gestao_controller import GestaoController
 from app.controllers.login.admin_login import AdminLoginController
 from app.schema.login.admin_login import AdminLogin
 from fastapi.templating import Jinja2Templates
@@ -52,6 +53,16 @@ def login_admin_api(dados: AdminLogin, db: Session = Depends(get_db)):
 # ==========================
 # PÁGINA PRINCIPAL APÓS LOGIN
 # ==========================
+
 @router.get("/admin", response_class=HTMLResponse)
-async def pagina_admin(request: Request):
-    return templates.TemplateResponse("admin.html", {"request": request})
+async def pagina_admin(request: Request, db: Session = Depends(get_db)):
+    
+    dados = GestaoController.obter_dados_dashboard(db)
+
+    return templates.TemplateResponse(
+        "admin.html",
+        {
+            "request": request,
+            **dados
+        }
+    )

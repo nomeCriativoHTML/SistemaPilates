@@ -31,7 +31,7 @@
             <article class="stat-card">
                 <i class="fas fa-user-graduate"></i>
                 <div>
-                    <h3>248</h3>
+                    <h3>{{ total_alunos }}</h3>
                     <p>Total de Alunos</p>
                 </div>
             </article>
@@ -39,7 +39,7 @@
             <article class="stat-card">
                 <i class="fas fa-chalkboard-teacher"></i>
                 <div>
-                    <h3>7</h3>
+                    <h3>{{ total_professores }}</h3>
                     <p>Professores</p>
                 </div>
             </article>
@@ -47,7 +47,7 @@
             <article class="stat-card">
                 <i class="fas fa-chalkboard-teacher"></i>
                 <div>
-                    <h3>3</h3>
+                    <h3>{{ total_estudios }}</h3>
                     <p>Estúdios</p>
                 </div>
             </article>
@@ -55,7 +55,7 @@
             <article class="stat-card">
                 <i class="fas fa-exclamation-triangle"></i>
                 <div>
-                    <h3>7</h3>
+                    <h3>{{ pagamentos_atrasados }}</h3>
                     <p>Pagamentos atrasados</p>
                 </div>
             </article>
@@ -65,7 +65,7 @@
             <h2>Alertas</h2>
             <div class="alert-card">
                 <i class="fas fa-exclamation-circle"></i>
-                <p><strong>Pagamentos Atrasados:</strong> 7 alunos com pagamento em atraso</p>
+                <p><strong>Pagamentos Atrasados:</strong> {{ pagamentos_atrasados }} alunos com pagamento em atraso</p>
             </div>
         </section>
 
