@@ -28,7 +28,7 @@
         </section>
 
         <section class="stats-section">
-            <article class="stat-card">
+            <article class="stat-card" onclick="carregarAlunos()">
                 <i class="fas fa-user-graduate"></i>
                 <div>
                     <h3>{{ total_alunos }}</h3>
@@ -36,7 +36,7 @@
                 </div>
             </article>
 
-            <article class="stat-card">
+            <article class="stat-card" onclick="carregarProfessores()">
                 <i class="fas fa-chalkboard-teacher"></i>
                 <div>
                     <h3>{{ total_professores }}</h3>
@@ -44,7 +44,7 @@
                 </div>
             </article>
 
-            <article class="stat-card">
+            <article class="stat-card" onclick="carregarEstudios()">
                 <i class="fas fa-chalkboard-teacher"></i>
                 <div>
                     <h3>{{ total_estudios }}</h3>
@@ -52,7 +52,7 @@
                 </div>
             </article>
 
-            <article class="stat-card">
+            <article class="stat-card" onclick="carregarPagamentosAtrasados()">
                 <i class="fas fa-exclamation-triangle"></i>
                 <div>
                     <h3>{{ pagamentos_atrasados }}</h3>
@@ -96,6 +96,15 @@
             </article>
         </section>
     </main>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="fecharModal()">×</button>
+            <h2 class="modal-title" id="modalTitulo"></h2>
+            <ul class="modal-list" id="modalConteudo"></ul>
+        </div>
+    </div>
+
     <script src="{{ url_for('static', path='/JS/admin.js') }}?v={{ time }}"></script>
 </body>
 </html>

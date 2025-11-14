@@ -59,6 +59,10 @@ app.include_router(professor_login_router)
 from app.routes.login.admin_login import router as admin_login_router
 app.include_router(admin_login_router)
 
+from app.routes.gestao_routes import router as gestao_router
+app.include_router(gestao_router)
+
+
 # =========================================================
 # Rotas básicas
 # =========================================================

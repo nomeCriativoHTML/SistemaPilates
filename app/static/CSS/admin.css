@@ -66,6 +66,7 @@ body{
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 15px;
     padding: 20px;
+    cursor: pointer;
 }
 
 .stat-card{
@@ -81,6 +82,7 @@ body{
 .stat-card i{
     font-size: 24px;
     color: #2c3e50;
+    cursor: pointer;
 }
 
 .secao-alerta{
@@ -127,6 +129,95 @@ body{
 
 .action-card:hover{
     transform: translateY(-3px);
+}
+
+/* Fundo escuro do modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Caixa do modal */
+.modal-box {
+    background: #ffffff;
+    width: 480px;
+    max-height: 75vh;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0px 8px 30px rgba(0,0,0,0.25);
+    position: relative;
+    overflow-y: auto;
+    transform: scale(0.8);
+    animation: zoomIn 0.25s ease forwards;
+}
+
+/* Scrollbar bonita */
+.modal-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-box::-webkit-scrollbar-thumb {
+    background: #c4c4c4;
+    border-radius: 8px;
+}
+
+/* Botão X */
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #f3f3f3;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.modal-close:hover {
+    background: #e2e2e2;
+}
+
+/* Título */
+.modal-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+/* Lista */
+.modal-list li {
+    background: #f7f7f7;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 4px solid #007bff;
+    font-size: 15px;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); }
+    to { transform: scale(1); }
 }
 
 @media (max-width: 600px){
