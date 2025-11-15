@@ -40,7 +40,13 @@ def api_listar_professores(db: Session = Depends(get_db)):
     return [
         {
             "id": p.id,
-            "nome": p.nome
+            "nome": p.nome,
+            "email": p.email,
+            "cref": p.cref,
+            "identificador": p.identificador,
+            "tipo_identificador": p.tipo_identificador,
+            "ativo": p.ativo,
+            "estudio_id": p.estudio_id
         }
         for p in profs
     ]
@@ -56,11 +62,14 @@ def api_listar_estudios(db: Session = Depends(get_db)):
         {
             "id": e.id,
             "nome": e.nome,
-            "endereco": e.endereco
+            "endereco": e.endereco,
+            "cep": e.cep,
+            "telefone": e.telefone,
+            "email": e.email,
+            "capacidade_maxima": e.capacidade_maxima
         }
         for e in estudios
     ]
-
 
 # ================================
 # Pagamentos atrasados
@@ -174,7 +183,7 @@ def editar_professor(
 
 
 # ================================
-# EDITAR PROFESSOR
+# EDITAR ESTUDIO
 # ================================
 
 @router.put("/estudio/{id}")
@@ -184,10 +193,14 @@ def editar_estudio(id: int, dados: dict, db: Session = Depends(get_db)):
     if not estudio:
         raise HTTPException(status_code=404, detail="Estúdio não encontrado")
 
-    for campo, valor in dados.items():
+    # Remover campos vazios ("")
+    dados_filtrados = {k: v for k, v in dados.items() if v not in ["", None]}
+
+    for campo, valor in dados_filtrados.items():
         setattr(estudio, campo, valor)
 
     db.commit()
     db.refresh(estudio)
 
     return {"mensagem": "Estúdio atualizado com sucesso"}
+

@@ -20,16 +20,22 @@ async function carregarAlunos() {
     dados.forEach(a => {
         html += `
         <li>
-            <strong>${a.nome}</strong> — ${a.email} — Status: ${a.status_pagamento}
-            
-            <button class="btn-editar" onclick="editarAluno(${a.id})">Editar</button>
-            <button class="btn-excluir" onclick="excluirAluno(${a.id})">Excluir</button>
+            <div class="item-info">
+                <strong>Nome:</strong> ${a.nome}<br>
+                <strong>Email:</strong> ${a.email}<br>
+                <strong>Status:</strong> ${a.status_pagamento}
+            </div>
+            <div class="item-botoes">
+                <button class="btn-editar" onclick="editarAluno(${a.id})">Editar</button>
+                <button class="btn-excluir" onclick="excluirAluno(${a.id})">Excluir</button>
+            </div>
         </li>`;
     });
     html += "</ul>";
 
     abrirModal("Lista de Alunos", html);
 }
+
 
 // ==========================
 // PROFESSORES
@@ -42,10 +48,18 @@ async function carregarProfessores() {
     dados.forEach(p => {
         html += `
         <li>
-            <strong>${p.nome}</strong>
-
-            <button class="btn-editar" onclick="editarProfessor(${p.id})">Editar</button>
-            <button class="btn-excluir" onclick="excluirProfessor(${p.id})">Excluir</button>
+            <div class="item-info">
+                <strong>Nome:</strong> ${p.nome}<br>
+                <strong>Email:</strong> ${p.email || "-" }<br>
+                <strong>CREF:</strong> ${p.cref || "-" }<br>
+                <strong>Identificador:</strong> ${p.identificador || "-"}<br>
+                <strong>Ativo:</strong> ${p.ativo ? "Sim" : "Não"}<br>
+                <strong>Estúdio ID:</strong> ${p.estudio_id || "-"}
+            </div>
+            <div class="item-botoes">
+                <button class="btn-editar" onclick="editarProfessor(${p.id})">Editar</button>
+                <button class="btn-excluir" onclick="excluirProfessor(${p.id})">Excluir</button>
+            </div>
         </li>`;
     });
     html += "</ul>";
@@ -64,10 +78,18 @@ async function carregarEstudios() {
     dados.forEach(e => {
         html += `
         <li>
-            <strong>${e.nome}</strong> — ${e.endereco}
-
-            <button class="btn-editar" onclick="editarEstudio(${e.id})">Editar</button>
-            <button class="btn-excluir" onclick="excluirEstudio(${e.id})">Excluir</button>
+            <div class="item-info">
+                <strong>Nome:</strong> ${e.nome || "-"}<br>
+                <strong>Endereço:</strong> ${e.endereco || "-"}<br>
+                <strong>CEP:</strong> ${e.cep || "-"}<br>
+                <strong>Telefone:</strong> ${e.telefone || "-"}<br>
+                <strong>Email:</strong> ${e.email || "-"}<br>
+                <strong>Capacidade Máxima:</strong> ${e.capacidade_maxima || "-"}
+            </div>
+            <div class="item-botoes">
+                <button class="btn-editar" onclick="editarEstudio(${e.id})">Editar</button>
+                <button class="btn-excluir" onclick="excluirEstudio(${e.id})">Excluir</button>
+            </div>
         </li>`;
     });
     html += "</ul>";
@@ -86,16 +108,18 @@ async function carregarPagamentosAtrasados() {
     dados.forEach(a => {
         html += `
         <li>
-            <strong>${a.nome}</strong> — ${a.email}
-
-            <button class="btn-editar" onclick="editarAluno(${a.id})">Editar</button>
-            <button class="btn-excluir" onclick="excluirAluno(${a.id})">Excluir</button>
+            <div class="item-info">
+                <strong>Nome:</strong> ${a.nome || "-"}<br>
+                <strong>Email:</strong> ${a.email || "-"}<br>
+                <strong>Status:</strong> ${a.status_pagamento || "Atrasado"}
+            </div>
         </li>`;
     });
     html += "</ul>";
 
     abrirModal("Pagamentos Atrasados", html);
 }
+
 
 
 async function excluirAluno(id) {
@@ -198,7 +222,6 @@ async function editarAluno(id) {
 
 function abrirModalEdicaoProfessor(professor) {
     const html = `
-
         <label>Nome:</label>
         <input id="editProfNome" class="modal-input" value="${professor.nome || ""}">
 
@@ -229,16 +252,24 @@ function abrirModalEdicaoProfessor(professor) {
     abrirModal("Editar Professor", html);
 }
 
+
 async function salvarEdicaoProfessor(id) {
-    const payload = {
+    let payload = {
         nome: document.getElementById("editProfNome").value,
         email: document.getElementById("editProfEmail").value,
         cref: document.getElementById("editProfCref").value,
         identificador: document.getElementById("editProfIdentificador").value,
         tipo_identificador: document.getElementById("editProfTipoIdentificador").value,
         ativo: document.getElementById("editProfAtivo").checked,
-        estudio_id: Number(document.getElementById("editProfEstudio").value)
+        estudio_id: document.getElementById("editProfEstudio").value
+            ? Number(document.getElementById("editProfEstudio").value)
+            : undefined
     };
+
+    // Remove campos vazios ou indefinidos
+    payload = Object.fromEntries(
+        Object.entries(payload).filter(([_, v]) => v !== "" && v !== undefined)
+    );
 
     const r = await fetch(`/gestao/professor/${id}`, {
         method: "PUT",
@@ -252,6 +283,7 @@ async function salvarEdicaoProfessor(id) {
     fecharModal();
 }
 
+
 async function editarProfessor(id) {
     const r = await fetch(`/gestao/dados/professores`);
     const dados = await r.json();
@@ -264,4 +296,70 @@ async function editarProfessor(id) {
     }
 
     abrirModalEdicaoProfessor(professor);
+}
+
+
+//FUNÇÃO PARA ABRIR MODAL DO ESTUDIO
+function abrirModalEdicaoEstudio(estudio) {
+    const html = `
+        <label>Nome:</label>
+        <input id="editEstNome" class="modal-input" value="${estudio.nome || ""}">
+
+        <label>Endereço:</label>
+        <input id="editEstEndereco" class="modal-input" value="${estudio.endereco || ""}">
+
+        <label>CEP:</label>
+        <input id="editEstCep" class="modal-input" value="${estudio.cep || ""}">
+
+        <label>Telefone:</label>
+        <input id="editEstTelefone" class="modal-input" value="${estudio.telefone || ""}">
+
+        <label>Email:</label>
+        <input id="editEstEmail" class="modal-input" value="${estudio.email || ""}">
+
+        <label>Capacidade Máxima:</label>
+        <input type="number" id="editEstCapacidade" class="modal-input" value="${estudio.capacidade_maxima || ""}">
+
+        <button class="btnSalvar" onclick="salvarEdicaoEstudio(${estudio.id})">Salvar</button>
+    `;
+
+    abrirModal("Editar Estúdio", html);
+}
+
+//FUNÇÃO PARA SALVAR EDIÇÃO DO ESTUDIO
+async function salvarEdicaoEstudio(id) {
+    const payload = {
+        nome: document.getElementById("editEstNome").value,
+        endereco: document.getElementById("editEstEndereco").value,
+        cep: document.getElementById("editEstCep").value,
+        telefone: document.getElementById("editEstTelefone").value,
+        email: document.getElementById("editEstEmail").value,
+        capacidade_maxima: Number(document.getElementById("editEstCapacidade").value)
+    };
+
+    const r = await fetch(`/gestao/estudio/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+
+    const res = await r.json();
+    alert(res.mensagem || res.erro);
+
+    fecharModal();
+}
+
+//FUNÇÃO EDITAR ESTUDIO ID
+async function editarEstudio(id) {
+    const r = await fetch(`/gestao/dados/estudios`);
+    const dados = await r.json();
+
+    const estudio = dados.find(e => e.id === id);
+
+    if (!estudio) {
+        alert("Estúdio não encontrado!");
+        return;
+    }
+
+    abrirModalEdicaoEstudio(estudio);
 }
