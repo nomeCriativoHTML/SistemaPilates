@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Time, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database.connection import Base  
@@ -16,9 +16,32 @@ class Estudio(Base):
     capacidade_maxima = Column(Integer, default=3)
     criado_em = Column(DateTime, default=datetime.utcnow)
 
-    #  Relacionamentos
+    # Relacionamentos
     agendas = relationship("Agenda", back_populates="estudio", cascade="all, delete-orphan")
     professores = relationship("Professor", back_populates="estudio")
 
+    # Horários de funcionamento do estúdio
+    horarios = relationship(
+        "HorarioFuncionamento",
+        back_populates="estudio",
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<Estudio(nome='{self.nome}', cep='{self.cep}', capacidade={self.capacidade_maxima})>"
+
+
+# ================================
+# HORÁRIOS DE FUNCIONAMENTO
+# ================================
+class HorarioFuncionamento(Base):
+    __tablename__ = "horarios_funcionamento"
+
+    id = Column(Integer, primary_key=True)
+    estudio_id = Column(Integer, ForeignKey("estudios.id"), nullable=False)
+    dia_semana = Column(String(15), nullable=False)  # segunda, terça, quarta...
+    hora_inicio = Column(Time, nullable=False)
+    hora_fim = Column(Time, nullable=False)
+
+    # Relacionamento reverso
+    estudio = relationship("Estudio", back_populates="horarios")

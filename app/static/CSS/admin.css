@@ -372,6 +372,97 @@ ul li:hover {
     justify-content: flex-start; /* ou center, se quiser centralizar */
 }
 
+/* ============================
+   TABELA PADRÃO DO MODAL
+============================ */
+.tabela-lista {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 15px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tabela-lista th {
+    background: #f0f0f0;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+.tabela-lista td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Listras alternadas */
+.tabela-lista tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* ============================
+   BOTÕES NA TABELA
+============================ */
+.tabela-lista button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+/* Bloquear */
+.btn-bloquear {
+    background: #ffae00;
+    color: white;
+}
+
+/* Editar */
+.btn-editar {
+    background: #007bff;
+    color: white;
+}
+
+/* Excluir */
+.btn-excluir {
+    background: #ff3b3b;
+    color: white;
+}
+
+/* Hover padrão */
+.tabela-lista button:hover {
+    opacity: .85;
+}
+
+/* ============================
+   BOTÃO ADICIONAR NO TOPO
+============================ */
+.btnAdicionar {
+    background: #28a745;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 14px;
+    font-size: 15px;
+}
+
+.btnAdicionar:hover {
+    background: #218838;
+}
+
+/* ============================
+   ORGANIZAÇÃO DAS AÇÕES
+============================ */
+.acoes {
+    display: flex;
+    gap: 6px;
+}
 
 
 

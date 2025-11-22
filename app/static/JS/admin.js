@@ -363,3 +363,205 @@ async function editarEstudio(id) {
 
     abrirModalEdicaoEstudio(estudio);
 }
+
+
+
+
+async function carregarAgenda() {
+    const hoje = new Date().toISOString().split("T")[0];
+
+    let horarios = [];
+
+    try {
+        const r = await fetch(`/agendas/dia/${hoje}`);
+        
+        // Se der erro 404, não quebra
+        if (!r.ok) {
+            console.warn("Nenhum horário encontrado para hoje.");
+        } else {
+            horarios = await r.json();
+        }
+
+    } catch (e) {
+        console.error("Erro ao buscar horários:", e);
+    }
+
+    // --- Mesmo com erro, abrimos o modal! ---
+    let html = `
+        <button class="btnAdicionar" onclick="abrirModalCadastrarAgenda()">+ Novo horário</button>
+        <ul>
+    `;
+
+    if (horarios.length === 0) {
+        html += `<p>Nenhum horário cadastrado para hoje.</p>`;
+    } else {
+        horarios.forEach(h => {
+            if (h.bloqueado) {
+                html += `
+                <li>
+                    <div class="item-info">
+                        <strong>${h.hora}</strong> — <span style="color:red;">BLOQUEADO</span><br>
+                        <strong>Motivo:</strong> ${h.motivo_bloqueio}
+                    </div>
+                    <div class="item-botoes">
+                        <button class="btn-editar" onclick="desbloquearHorario(${h.id})">Desbloquear</button>
+                        <button class="btn-excluir" onclick="excluirHorario(${h.id})">Excluir</button>
+                    </div>
+                </li>`;
+            } else {
+                html += `
+                <li>
+                    <div class="item-info">
+                        <strong>${h.hora}</strong> — ${h.tipo_aula}<br>
+                        <strong>Professor:</strong> ${h.professor_id}<br>
+                        <strong>Estúdio:</strong> ${h.estudio_id}<br>
+                        <strong>Status:</strong> Disponível
+                    </div>
+                    <div class="item-botoes">
+                        <button class="btn-editar" onclick="editarHorario(${h.id})">Editar</button>
+                        <button class="btn-excluir" onclick="excluirHorario(${h.id})">Excluir</button>
+                        <button class="btn-bloquear" onclick="abrirModalBloqueio(${h.id})">Bloquear</button>
+                    </div>
+                </li>`;
+            }
+        });
+    }
+
+    html += "</ul>";
+
+    abrirModal("Agenda do Dia", html);
+}
+
+
+function abrirModalCadastrarAgenda() {
+    const html = `
+        <label>Data:</label>
+        <input id="agdData" class="modal-input" type="date">
+
+        <label>Hora:</label>
+        <input id="agdHora" class="modal-input" type="time">
+
+        <label>Estúdio ID:</label>
+        <input id="agdEstudio" class="modal-input" type="number">
+
+        <label>Professor ID:</label>
+        <input id="agdProfessor" class="modal-input" type="number">
+
+        <label>Tipo de Aula:</label>
+        <input id="agdTipo" class="modal-input" type="text">
+
+        <button class="btnSalvar" onclick="salvarNovaAgenda()">Salvar</button>
+    `;
+
+    abrirModal("Novo Horário", html);
+}
+
+
+
+async function salvarNovaAgenda() {
+    const payload = {
+        data: document.getElementById("agdData").value,
+        hora: document.getElementById("agdHora").value,
+        estudio_id: Number(document.getElementById("agdEstudio").value),
+        professor_id: Number(document.getElementById("agdProfessor").value),
+        tipo_aula: document.getElementById("agdTipo").value
+    };
+
+    const r = await fetch("/agendas/", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+    });
+
+    const j = await r.json();
+    alert(j.message || j.error);
+
+    fecharModal();
+}
+
+function abrirModalBloqueio(id) {
+    const html = `
+        <label>Motivo do bloqueio:</label>
+        <input id="motivoBloqueio" class="modal-input" type="text">
+
+        <button class="btnSalvar" onclick="bloquearHorario(${id})">Bloquear</button>
+    `;
+
+    abrirModal("Bloquear Horário", html);
+}
+
+
+async function desbloquearHorario(id) {
+    const r = await fetch(`/agendas/${id}/desbloquear`, {
+        method: "PATCH"
+    });
+
+    const j = await r.json();
+    alert(j.message || j.error);
+
+    fecharModal();
+}
+
+
+async function excluirHorario(id) {
+    if (!confirm("Excluir horário?")) return;
+
+    const r = await fetch(`/agendas/${id}`, {
+        method: "DELETE"
+    });
+
+    alert("Horário excluído.");
+    fecharModal();
+}
+
+
+async function carregarTodasAgendas() {
+    let agendas = [];
+
+    try {
+        const r = await fetch("/gestao/dados/agendas");
+        agendas = await r.json();
+    } catch (err) {
+        console.error("Erro ao carregar agendas:", err);
+        agendas = [];
+    }
+
+    let html = `
+        <button class="btnAdicionar" onclick="abrirModalCadastrarAgenda()">+ Nova agenda</button>
+        <table class="tabela-lista">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Professor</th>
+                    <th>Estúdio</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    agendas.forEach(a => {
+        html += `
+        <tr>
+            <td>${a.data}</td>
+            <td>${a.hora}</td>
+            <td>${a.professor_id}</td>
+            <td>${a.estudio_id}</td>
+            <td>${a.tipo_aula ?? "-"}</td>
+            <td>${a.bloqueado ? "<span style='color:red;'>BLOQUEADO</span>" : "Ativo"}</td>
+            <td>
+                ${!a.bloqueado ? `<button class="btn-bloquear" onclick="abrirModalBloqueio(${a.id})">Bloquear</button>` : ""}
+                <button class="btn-editar" onclick="editarHorario(${a.id})">Editar</button>
+                <button class="btn-excluir" onclick="excluirHorario(${a.id})">Excluir</button>
+            </td>
+        </tr>
+        `;
+    });
+
+    html += `</tbody></table>`;
+
+    abrirModal("Todas as Agendas", html);
+}

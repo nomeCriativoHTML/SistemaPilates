@@ -7,6 +7,9 @@ from app.database.connection import get_db
 from app.models.aluno import Aluno
 from app.models.professor import Professor
 from app.models.estudio import Estudio
+from app.models.relacionamentos.agenda import Agenda
+
+
 
 router = APIRouter(
     prefix="/gestao",
@@ -69,6 +72,31 @@ def api_listar_estudios(db: Session = Depends(get_db)):
             "capacidade_maxima": e.capacidade_maxima
         }
         for e in estudios
+    ]
+
+
+# ================================
+# Listar agendas
+# ================================
+# ================================
+# Listar TODAS as agendas
+# ================================
+@router.get("/dados/agendas")
+def api_listar_agendas(db: Session = Depends(get_db)):
+    agendas = db.query(Agenda).order_by(Agenda.data.asc(), Agenda.hora.asc()).all()
+
+    return [
+        {
+            "id": a.id,
+            "data": a.data.isoformat(),
+            "hora": a.hora.strftime("%H:%M"),
+            "tipo_aula": a.tipo_aula,
+            "professor_id": a.professor_id,
+            "estudio_id": a.estudio_id,
+            "bloqueado": a.bloqueado,
+            "motivo_bloqueio": a.motivo_bloqueio
+        }
+        for a in agendas
     ]
 
 # ================================
@@ -204,3 +232,28 @@ def editar_estudio(id: int, dados: dict, db: Session = Depends(get_db)):
 
     return {"mensagem": "Estúdio atualizado com sucesso"}
 
+
+
+# ================================
+# Listar agendas
+# ================================
+
+
+@router.get("/dados/agendas")
+def api_listar_agendas(db: Session = Depends(get_db)):
+    agendas = db.query(Agenda).all()
+    return [
+        {
+            "id": a.id,
+            "data": str(a.data),
+            "hora": str(a.hora),
+            "tipo_aula": a.tipo_aula,
+            "status": a.status.value,
+            "professor_id": a.professor_id,
+            "substituto_id": a.substituto_id,
+            "estudio_id": a.estudio_id,
+            "bloqueado": a.bloqueado,
+            "motivo_bloqueio": a.motivo_bloqueio
+        }
+        for a in agendas
+    ]

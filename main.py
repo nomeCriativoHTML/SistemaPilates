@@ -62,6 +62,10 @@ app.include_router(admin_login_router)
 from app.routes.gestao_routes import router as gestao_router
 app.include_router(gestao_router)
 
+from app.routes.agenda_routes import router as agenda_router
+app.include_router(agenda_router)
+
+
 
 # =========================================================
 # Rotas básicas

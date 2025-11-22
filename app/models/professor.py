@@ -20,11 +20,17 @@ class Professor(Base):
     estudio_id = Column(Integer, ForeignKey("estudios.id"), nullable=True)
 
     # Relacionamentos
-    
-    agendas = relationship("Agenda", back_populates="professor", cascade="all, delete-orphan")
-    agendamentos = relationship("Agendamento", back_populates="professor")
+    agendas = relationship(
+        "Agenda",
+        back_populates="professor",
+        cascade="all, delete-orphan",
+        foreign_keys="Agenda.professor_id"
+    )
+
+    #agendamentos = relationship("Agendamento", back_populates="professor")
     estudio = relationship("Estudio", back_populates="professores")
     evolucoes = relationship("MinhaEvolucao", back_populates="professor", cascade="all, delete-orphan")
+
 
 # ===========================
 # ALUNO NA AULA
@@ -34,7 +40,7 @@ class AlunoNaAula(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     agenda_id = Column(Integer, ForeignKey("agendas.id"), nullable=False)
-    aluno_id = Column(Integer, ForeignKey("alunos.id"), nullable=False)  # Alterado de aluno_nome para FK
+    aluno_id = Column(Integer, ForeignKey("alunos.id"), nullable=False)
     presenca = Column(Enum(Presenca), default=Presenca.indefinido)
     observacoes = Column(String(255))
 
