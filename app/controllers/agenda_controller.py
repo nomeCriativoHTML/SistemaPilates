@@ -122,8 +122,3 @@ class AgendaController:
         return agenda
 
 
-class AgendaController:
-
-    @staticmethod
-    def listar_agendas(db: Session):
-        return db.query(Agenda).order_by(Agenda.data).all()
