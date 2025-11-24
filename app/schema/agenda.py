@@ -51,8 +51,16 @@ class AgendaUpdate(BaseModel):
 
 class AgendaOut(AgendaBase):
     id: int
+    professor_nome: Optional[str] = None
+    estudio_nome: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+
+class BloqueioAgenda(BaseModel):
+    motivo: str
+
 
 
 

@@ -364,9 +364,6 @@ async function editarEstudio(id) {
     abrirModalEdicaoEstudio(estudio);
 }
 
-
-
-
 async function carregarAgenda() {
     const hoje = new Date().toISOString().split("T")[0];
 
@@ -433,7 +430,20 @@ async function carregarAgenda() {
 }
 
 
-function abrirModalCadastrarAgenda() {
+async function abrirModalCadastrarAgenda() {
+    const professores = await fetch("/professores/").then(r => r.json());
+    const estudios = await fetch("/estudios/").then(r => r.json());
+
+    let opcoesProfessores = "";
+    professores.forEach(p => {
+        opcoesProfessores += `<option value="${p.id}">${p.nome}</option>`;
+    });
+
+    let opcoesEstudios = "";
+    estudios.forEach(e => {
+        opcoesEstudios += `<option value="${e.id}">${e.nome}</option>`;
+    });
+
     const html = `
         <label>Data:</label>
         <input id="agdData" class="modal-input" type="date">
@@ -441,11 +451,15 @@ function abrirModalCadastrarAgenda() {
         <label>Hora:</label>
         <input id="agdHora" class="modal-input" type="time">
 
-        <label>Estúdio ID:</label>
-        <input id="agdEstudio" class="modal-input" type="number">
+        <label>Estúdio:</label>
+        <select id="agdEstudio" class="modal-input">
+            ${opcoesEstudios}
+        </select>
 
-        <label>Professor ID:</label>
-        <input id="agdProfessor" class="modal-input" type="number">
+        <label>Professor:</label>
+        <select id="agdProfessor" class="modal-input">
+            ${opcoesProfessores}
+        </select>
 
         <label>Tipo de Aula:</label>
         <input id="agdTipo" class="modal-input" type="text">
@@ -478,7 +492,6 @@ async function salvarNovaAgenda() {
 
     fecharModal();
 }
-
 function abrirModalBloqueio(id) {
     const html = `
         <label>Motivo do bloqueio:</label>
@@ -497,7 +510,7 @@ async function desbloquearHorario(id) {
     });
 
     const j = await r.json();
-    alert(j.message || j.error);
+    alert(j.message || "Agenda desbloqueada com sucesso!");
 
     fecharModal();
 }
@@ -553,7 +566,11 @@ async function carregarTodasAgendas() {
             <td>${a.tipo_aula ?? "-"}</td>
             <td>${a.bloqueado ? "<span style='color:red;'>BLOQUEADO</span>" : "Ativo"}</td>
             <td>
-                ${!a.bloqueado ? `<button class="btn-bloquear" onclick="abrirModalBloqueio(${a.id})">Bloquear</button>` : ""}
+                ${
+                    !a.bloqueado
+                    ? `<button class="btn-bloquear" onclick="abrirModalBloqueio(${a.id})">Bloquear</button>`
+                    : `<button class="btn-desbloquear" onclick="desbloquearHorario(${a.id})">Desbloquear</button>`
+                }
                 <button class="btn-editar" onclick="editarHorario(${a.id})">Editar</button>
                 <button class="btn-excluir" onclick="excluirHorario(${a.id})">Excluir</button>
             </td>
@@ -565,3 +582,125 @@ async function carregarTodasAgendas() {
 
     abrirModal("Todas as Agendas", html);
 }
+
+async function bloquearHorario(id) {
+    const motivo = document.getElementById("motivoBloqueio").value;
+
+    if (!motivo || motivo.trim() === "") {
+        alert("Informe o motivo do bloqueio.");
+        return;
+    }
+
+    const r = await fetch(`/agendas/${id}/bloquear`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ motivo })
+    });
+
+    const j = await r.json();
+
+    if (!r.ok) {
+        alert(j.detail || "Erro ao bloquear horário.");
+        return;
+    }
+
+    alert("Horário bloqueado com sucesso!");
+
+    fecharModal();
+
+    // recarrega a agenda atual
+    carregarAgenda();
+}
+
+
+async function editarHorario(id) {
+    try {
+        const r = await fetch(`/agendas/${id}`);
+        const agenda = await r.json();
+
+        // Carregar listas
+        const professores = await fetch("/professores/").then(r => r.json());
+        const estudios = await fetch("/estudios/").then(r => r.json());
+
+        let opcoesProfessores = "";
+        professores.forEach(p => {
+            opcoesProfessores += `
+                <option value="${p.id}" ${p.id === agenda.professor_id ? "selected" : ""}>
+                    ${p.nome}
+                </option>`;
+        });
+
+        let opcoesEstudios = "";
+        estudios.forEach(e => {
+            opcoesEstudios += `
+                <option value="${e.id}" ${e.id === agenda.estudio_id ? "selected" : ""}>
+                    ${e.nome}
+                </option>`;
+        });
+
+        const html = `
+            <label>Data:</label>
+            <input id="editData" class="modal-input" type="date" value="${agenda.data}">
+
+            <label>Hora:</label>
+            <input id="editHora" class="modal-input" type="time" value="${agenda.hora}">
+
+            <label>Estúdio:</label>
+            <select id="editEstudio" class="modal-input">
+                ${opcoesEstudios}
+            </select>
+
+            <label>Professor:</label>
+            <select id="editProfessor" class="modal-input">
+                ${opcoesProfessores}
+            </select>
+
+            <label>Tipo de Aula:</label>
+            <input id="editTipo" class="modal-input" type="text" value="${agenda.tipo_aula ?? ""}">
+
+            <button class="btnSalvar" onclick="atualizarHorario(${id})">Salvar Alterações</button>
+        `;
+
+        abrirModal("Editar Horário", html);
+
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar dados da agenda.");
+    }
+}
+
+
+
+async function atualizarHorario(id) {
+    const payload = {
+        data: document.getElementById("editData").value,
+        hora: document.getElementById("editHora").value,
+        estudio_id: Number(document.getElementById("editEstudio").value),
+        professor_id: Number(document.getElementById("editProfessor").value),
+        tipo_aula: document.getElementById("editTipo").value
+    };
+
+    try {
+        const r = await fetch(`/agendas/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const j = await r.json();
+
+        if (!r.ok) {
+            alert(j.detail || "Erro ao atualizar horário.");
+            return;
+        }
+
+        alert("Horário atualizado com sucesso!");
+
+        fecharModal();
+        carregarAgenda(); // atualiza a lista
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao atualizar horário.");
+    }
+}
+

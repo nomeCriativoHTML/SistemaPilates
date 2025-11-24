@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.models.relacionamentos.agenda import Agenda
 from app.database.connection import get_db
 from app.controllers.agenda_controller import AgendaController
-from app.schema.agenda import AgendaCreate, AgendaUpdate
+from app.schema.agenda import AgendaCreate, AgendaUpdate, BloqueioAgenda
 from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(directory="app/templates")
@@ -48,7 +48,7 @@ async def criar_agenda_form(request: Request, db: Session = Depends(get_db)):
         return JSONResponse({"error": str(e)}, status_code=500)
 
 # =====================================================
-# API REST
+# API REST PADRÃO
 # =====================================================
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -71,12 +71,16 @@ def excluir_agenda(agenda_id: int, db: Session = Depends(get_db)):
     return AgendaController.excluir_agenda(db, agenda_id)
 
 # =====================================================
-# AÇÕES ESPECIAIS
+# AÇÕES ESPECIAIS — COLOCAR ANTES DE /{agenda_id}
 # =====================================================
 
 @router.patch("/{agenda_id}/bloquear")
-def bloquear_agenda(agenda_id: int, motivo: str, db: Session = Depends(get_db)):
-    return AgendaController.bloquear_agenda(db, agenda_id, motivo)
+async def bloquear_agenda(
+    agenda_id: int,
+    dados: BloqueioAgenda,
+    db: Session = Depends(get_db)
+):
+    return AgendaController.bloquear_agenda(db, agenda_id, dados.motivo)
 
 
 @router.patch("/{agenda_id}/desbloquear")
@@ -86,10 +90,6 @@ def desbloquear_agenda(agenda_id: int, db: Session = Depends(get_db)):
 # =====================================================
 # FILTROS IMPORTANTES
 # =====================================================
-
-# ⚠️ IMPORTANTE:
-# A rota /dia/{data} PRECISA vir antes de /{agenda_id}
-# para evitar 404 por conflito de rota!
 
 @router.get("/dia/{data}")
 def listar_agendas_por_dia(data: str, db: Session = Depends(get_db)):
@@ -120,16 +120,21 @@ def listar_por_estudio(estudio_id: int, db: Session = Depends(get_db)):
     ).order_by(Agenda.data, Agenda.hora).all()
 
 # =====================================================
-# ÚLTIMA ROTA — PARA NÃO QUEBRAR /dia/{data}
+# ÚLTIMA ROTA — PARA NÃO QUEBRAR NADA
 # =====================================================
 
 @router.get("/{agenda_id}")
 def obter_agenda(agenda_id: int, db: Session = Depends(get_db)):
     return AgendaController.obter_agenda(db, agenda_id)
 
-#ROTA PARA LISTAR AS AGENDAS
-@router.get("/agendas", response_class=HTMLResponse)
-def listar_agendas(request: Request, db: Session = Depends(get_db)):
-    agendas = AgendaController.listar_agendas(db)
-    return templates.TemplateResponse("agendas/listar_agendas.html", {"request": request, "agendas": agendas})
+# =====================================================
+# PÁGINA HTML DE LISTAGEM COMPLETA
+# =====================================================
 
+@router.get("/agendas", response_class=HTMLResponse)
+def listar_agendas_html(request: Request, db: Session = Depends(get_db)):
+    agendas = AgendaController.listar_agendas(db)
+    return templates.TemplateResponse(
+        "agendas/listar_agendas.html",
+        {"request": request, "agendas": agendas}
+    )
