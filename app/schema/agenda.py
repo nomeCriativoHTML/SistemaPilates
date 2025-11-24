@@ -28,6 +28,7 @@ class AgendaCreate(AgendaBase):
     pass
 
 class AgendaUpdate(BaseModel):
+    
     estudio_id: Optional[int] = None
     professor_id: Optional[int] = None
     substituto_id: Optional[int] = None

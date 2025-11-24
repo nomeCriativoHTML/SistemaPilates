@@ -21,6 +21,7 @@ async function carregarAlunos() {
         html += `
         <li>
             <div class="item-info">
+                <strong>ID:</strong> ${a.id}<br>
                 <strong>Nome:</strong> ${a.nome}<br>
                 <strong>Email:</strong> ${a.email}<br>
                 <strong>Status:</strong> ${a.status_pagamento}
@@ -49,6 +50,7 @@ async function carregarProfessores() {
         html += `
         <li>
             <div class="item-info">
+                <strong>ID:</strong> ${p.id}<br>
                 <strong>Nome:</strong> ${p.nome}<br>
                 <strong>Email:</strong> ${p.email || "-" }<br>
                 <strong>CREF:</strong> ${p.cref || "-" }<br>
@@ -79,6 +81,7 @@ async function carregarEstudios() {
         html += `
         <li>
             <div class="item-info">
+                <strong>ID:</strong> ${e.id}<br>
                 <strong>Nome:</strong> ${e.nome || "-"}<br>
                 <strong>Endereço:</strong> ${e.endereco || "-"}<br>
                 <strong>CEP:</strong> ${e.cep || "-"}<br>
@@ -109,6 +112,7 @@ async function carregarPagamentosAtrasados() {
         html += `
         <li>
             <div class="item-info">
+                <strong>ID:</strong> ${a.id}<br>
                 <strong>Nome:</strong> ${a.nome || "-"}<br>
                 <strong>Email:</strong> ${a.email || "-"}<br>
                 <strong>Status:</strong> ${a.status_pagamento || "Atrasado"}
