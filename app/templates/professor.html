@@ -6,6 +6,7 @@
     <title>Dashboard - Professor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', path='/CSS/professor.css') }}?v={{ time }}">
+    <link rel="icon" href="/static/img/img-tela-login.jpg" type="image/png">
 </head>
 <body>
 
@@ -24,39 +25,30 @@
         </header>
 
         <section class="greeting">
-            <h2>Bom dia, {{ professor.nome }}!</h2>
+            <h2>Bem-vindo, {{ professor.nome }}!</h2>
             <p>Hoje é {{ data_atual }}</p>
         </section>
 
-        <section class="section">
-            <div class="section-header">
-                <h3>Agenda de Hoje</h3>
-                <i class="far fa-calendar-alt"></i>
+<section class="section">
+    <div class="section-header">
+        <h3>Agenda de Hoje</h3>
+        <i class="far fa-calendar-alt"></i>
+    </div>
+    <div class="class-list">
+        {% for aula in aulas_do_dia %}
+        <div class="class-item">
+            <i class="fas fa-circle icon-small"></i>
+            <div class="class-details">
+                <span class="class-time">Horário: {{ aula.hora.strftime("%H:%M") }}</span>
+                <span class="class-name">Tipo de aula: {{ aula.tipo_aula }} - {{ aula.agendamentos|length }}/{{ aula.max_alunos }} alunos</span>
+                <span class="class-studio">Estúdio: {{ aula.estudio.nome }}</span>
             </div>
-            <div class="class-list">
-                <div class="class-item">
-                    <i class="fas fa-circle icon-small"></i>
-                    <div class="class-details">
-                        <span class="class-time">08:00 - 10:00</span>
-                        <span class="class-name">Pilates Iniciante - 2/3 alunos</span>
-                    </div>
-                </div>
-                <div class="class-item">
-                    <i class="fas fa-circle icon-small"></i>
-                    <div class="class-details">
-                        <span class="class-time">14:00 - 15:00</span>
-                        <span class="class-name">Fisioterapia - 1/2 alunos</span>
-                    </div>
-                </div>
-                <div class="class-item">
-                    <i class="fas fa-circle icon-small"></i>
-                    <div class="class-details">
-                        <span class="class-time">16:00 - 17:00</span>
-                        <span class="class-name">Pilates Avançado - 3/3 alunos</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
+        {% else %}
+        <p>Nenhuma aula cadastrada para hoje.</p>
+        {% endfor %}
+    </div>
+</section>
 
         <section class="section">
             <div class="section-header">
@@ -64,22 +56,22 @@
                 <i class="fas fa-arrow-right"></i>
             </div>
             <div class="next-class-list">
+                {% for aula in proximas_aulas %}
                 <div class="next-class-item">
                     <div class="class-details">
-                        <span class="class-day">Amanhã - 09:00</span>
-                        <span class="class-name">Pilates Intermediário</span>
+                        <span class="class-day">Data: {{ aula.dia_semana }} - {{ aula.data.strftime("%d/%m/%Y") }}</span>
+                        <span class="class-day">Horário: {{ aula.hora.strftime("%H:%M") }}</span>
+                        <span class="class-name">Tipo de aula: {{ aula.tipo_aula }}</span>
+                        <span class="class-studio">Estúdio: {{ aula.estudio.nome }}</span>
                     </div>
-                    <span class="class-count">2/3</span>
+                    <span class="class-count">{{ aula.agendamentos|length }}/{{ aula.max_alunos }}</span>
                 </div>
-                <div class="next-class-item">
-                    <div class="class-details">
-                        <span class="class-day">Sexta - 10:00</span>
-                        <span class="class-name">Fisioterapia</span>
-                    </div>
-                    <span class="class-count">1/1</span>
-                </div>
+                {% else %}
+                <p>Sem próximas aulas cadastradas.</p>
+                {% endfor %}
             </div>
         </section>
+
 
         <section class="section">
             <h3>Ações Rápidas</h3>

@@ -1,10 +1,15 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from sqlalchemy import and_
+from sqlalchemy.orm import joinedload
+from datetime import date, datetime
 from app.models.relacionamentos.agenda import Agenda
 from app.schema.agenda import AgendaCreate, AgendaUpdate
 from app.models.estudio import Estudio
 from app.models.professor import Professor
+
+
+
+
 
 class AgendaController:
     @staticmethod
@@ -33,6 +38,8 @@ class AgendaController:
         # valida motivo se bloqueado
         if dados.bloqueado and (dados.motivo_bloqueio is None or dados.motivo_bloqueio.strip() == ""):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Motivo obrigatório ao bloquear a aula.")
+        
+        
 
         # evita duplicidade: mesma estúdio, mesma data e hora
         existe = db.query(Agenda).filter(
@@ -43,18 +50,25 @@ class AgendaController:
         if existe:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Já existe uma aula nesse estúdio com essa data e hora.")
 
+  
+        # Convertendo string "HH:MM" para time
+        hora_obj = dados.hora
+        if isinstance(dados.hora, str):
+            hora_obj = datetime.strptime(dados.hora, "%H:%M").time()
+
         nova = Agenda(
             estudio_id=dados.estudio_id,
             professor_id=dados.professor_id,
             substituto_id=dados.substituto_id,
             data=dados.data,
-            hora=dados.hora,
+            hora=hora_obj,  # aqui
             tipo_aula=dados.tipo_aula,
             max_alunos=dados.max_alunos if dados.max_alunos else 3,
             status=dados.status,
             bloqueado=dados.bloqueado,
             motivo_bloqueio=dados.motivo_bloqueio
-        )
+)
+
 
         db.add(nova)
         db.commit()
@@ -122,3 +136,43 @@ class AgendaController:
         return agenda
 
 
+    @staticmethod
+    def listar_agenda_do_dia(db: Session, professor_id: int):
+        hoje = date.today()
+
+        return (
+            db.query(Agenda)
+            .filter(Agenda.professor_id == professor_id)
+            .filter(Agenda.data == hoje)
+            .order_by(Agenda.hora.asc())
+            .all()
+        )
+    
+    
+
+    @staticmethod
+    def listar_proximas_aulas(db: Session, professor_id: int):
+        hoje = date.today()
+        dias_semana = {
+            "Monday": "Segunda-feira",
+            "Tuesday": "Terça-feira",
+            "Wednesday": "Quarta-feira",
+            "Thursday": "Quinta-feira",
+            "Friday": "Sexta-feira",
+            "Saturday": "Sábado",
+            "Sunday": "Domingo"
+        }
+
+        proximas_aulas = (
+            db.query(Agenda)
+            .options(joinedload(Agenda.estudio))
+            .filter(Agenda.professor_id == professor_id)
+            .filter(Agenda.data > hoje)
+            .order_by(Agenda.data.asc(), Agenda.hora.asc())
+            .all()
+        )
+
+        for aula in proximas_aulas:
+            aula.dia_semana = dias_semana[aula.data.strftime("%A")]
+
+        return proximas_aulas

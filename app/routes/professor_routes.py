@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.controllers.professor_controller import ProfessorController
 from app.schema.professor import ProfessorCreate, ProfessorUpdate
+from datetime import date
+from app.utils.security import get_current_professor
+from app.controllers.agenda_controller import AgendaController
 
 
 from fastapi.templating import Jinja2Templates
@@ -106,4 +109,3 @@ def excluir_professor(professor_id: int, db: Session = Depends(get_db)):
     Exclui um professor pelo ID.
     """
     return ProfessorController.excluir_professor(db, professor_id)
-

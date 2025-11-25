@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from datetime import datetime
-
+from app.controllers.agenda_controller import AgendaController
 from app.database.connection import get_db
 from app.schema.login.professor_login import ProfessorLogin
 from app.controllers.login.professor_login import ProfessorLoginController
@@ -72,16 +72,28 @@ async def login_professor_form(request: Request, db: Session = Depends(get_db)):
 @router.get("/dashboard", response_class=HTMLResponse)
 async def pagina_professor(
     request: Request,
-    professor = Depends(get_current_professor)
+    professor = Depends(get_current_professor),
+    db: Session = Depends(get_db)
 ):
     data_formatada = datetime.now().strftime("%d/%m/%Y")
+    
+    # Buscar aulas do dia para este professor
+    aulas_do_dia = AgendaController.listar_agenda_do_dia(
+        db=db,
+        professor_id=professor.id  # se professor for objeto SQLAlchemy
+    )
 
+    proximas_aulas = AgendaController.listar_proximas_aulas(
+        db=db,
+        professor_id=professor.id
+    )
     return templates.TemplateResponse(
         "professor.html",
         {
             "request": request,
             "professor": professor,
-            "data_atual": data_formatada
+            "data_atual": data_formatada,
+            "aulas_do_dia": aulas_do_dia,
+            "proximas_aulas": proximas_aulas
         }
     )
-
