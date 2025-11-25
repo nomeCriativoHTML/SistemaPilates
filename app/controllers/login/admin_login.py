@@ -35,5 +35,6 @@ class AdminLoginController:
         return {
             "mensagem": f"Bem-vindo(a), {admin.nome}!",
             "admin_id": admin.id,
-            "tipo_admin": admin.tipo_admin
+            "tipo_admin": admin.tipo_admin,
+            "token": token
         }

@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Request, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
+from datetime import datetime
+from app.utils.security import get_current_admin
 from app.database.connection import get_db
 from app.controllers.gestao_controller import GestaoController
 from app.controllers.login.admin_login import AdminLoginController
@@ -30,7 +32,26 @@ async def login_admin_form(request: Request, db: Session = Depends(get_db)):
             db, AdminLogin(email=email, senha=senha)
         )
 
-        return JSONResponse(content=resultado)
+        token = resultado["token"]
+
+        # Criar resposta JSON com redirecionamento
+        response = JSONResponse({
+            "message": resultado["mensagem"],
+            "redirect": "/login/admin"
+        })
+
+        # Gravar cookie HTTP-only
+        response.set_cookie(
+            key="admin_access_token",
+            value=token,
+            httponly=True,
+            secure=False,   # coloque True em HTTPS
+            samesite="lax",
+            max_age=60 * 60 * 24,  # 1 dia
+        )
+
+        return response
+
 
     except HTTPException as e:
         return JSONResponse(content={"error": e.detail}, status_code=e.status_code)
@@ -55,7 +76,11 @@ def login_admin_api(dados: AdminLogin, db: Session = Depends(get_db)):
 # ==========================
 
 @router.get("/admin", response_class=HTMLResponse)
-async def pagina_admin(request: Request, db: Session = Depends(get_db)):
+async def pagina_admin(
+    request: Request,
+    admin = Depends(get_current_admin),
+    db: Session = Depends(get_db)):
+    
     
     dados = GestaoController.obter_dados_dashboard(db)
 
