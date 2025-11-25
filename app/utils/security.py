@@ -57,3 +57,24 @@ def get_current_professor(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Professor não encontrado")
 
     return professor
+
+
+def get_current_aluno(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("aluno_access_token")
+
+    if not token:
+        raise HTTPException(status_code=401, detail="Não autenticado")
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        aluno_id: int = payload.get("id")
+
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
+    aluno = db.query(Professor).filter(Professor.id == aluno_id).first()
+
+    if not aluno:
+        raise HTTPException(status_code=404, detail="Aluno não encontrado")
+
+    return aluno

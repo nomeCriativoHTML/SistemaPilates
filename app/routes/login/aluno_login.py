@@ -2,9 +2,11 @@ from fastapi import APIRouter, Request, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
+from datetime import datetime
 from app.controllers.login.aluno_login import AlunoLoginController
 from app.schema.login.aluno_login import AlunoLogin
 from fastapi.templating import Jinja2Templates
+from app.utils.security import get_current_aluno
 
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(prefix="/login", tags=["Login Aluno"])
@@ -40,7 +42,25 @@ async def login_aluno_form(request: Request, db: Session = Depends(get_db)):
             db, AlunoLogin(email=email, senha=senha)
         )
 
-        return JSONResponse(content=resultado)
+        token = resultado["token"]
+
+        # Criar resposta JSON com redirecionamento
+        response = JSONResponse({
+            "message": resultado["message"],
+            "redirect": "/login/aluno"
+        })
+
+        # Gravar cookie HTTP-only
+        response.set_cookie(
+            key="aluno_access_token",
+            value=token,
+            httponly=True,
+            secure=False,   # coloque True em HTTPS
+            samesite="lax",
+            max_age=60 * 60 * 24,  # 1 dia
+        )
+
+        return response
 
     except HTTPException as e:
         return JSONResponse(content={"error": e.detail}, status_code=e.status_code)
@@ -63,9 +83,20 @@ def login_aluno_api(dados: AlunoLogin, db: Session = Depends(get_db)):
 
 
 #RENDERIZA A PAGINA DE ALUNO APÓS O LOGIN
+
 @router.get("/aluno", response_class=HTMLResponse)
-async def pagina_aluno(request: Request):
-    """
-    Página principal do aluno após login.
-    """
-    return templates.TemplateResponse("aluno.html", {"request": request})
+async def pagina_aluno(
+    request: Request,
+    aluno = Depends(get_current_aluno)
+):
+    data_formatada = datetime.now().strftime("%d/%m/%Y")
+
+    return templates.TemplateResponse(
+        "aluno.html",
+        {
+            "request": request,
+            "aluno": aluno,
+            "data_atual": data_formatada
+        }
+    )
+
