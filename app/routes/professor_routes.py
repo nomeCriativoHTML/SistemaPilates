@@ -5,6 +5,7 @@ from app.database.connection import get_db
 from app.controllers.professor_controller import ProfessorController
 from app.schema.professor import ProfessorCreate, ProfessorUpdate
 
+
 from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="app/templates")
 
@@ -105,3 +106,4 @@ def excluir_professor(professor_id: int, db: Session = Depends(get_db)):
     Exclui um professor pelo ID.
     """
     return ProfessorController.excluir_professor(db, professor_id)
+

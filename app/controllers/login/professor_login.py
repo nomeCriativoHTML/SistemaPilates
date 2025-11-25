@@ -40,3 +40,5 @@ class ProfessorLoginController:
             "nome": professor.nome,
             "token": token
         }
+
+

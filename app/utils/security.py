@@ -1,6 +1,12 @@
 import hashlib
 import jwt
 from datetime import datetime, timedelta
+from fastapi import Request, HTTPException, status, Depends
+from jose import jwt, JWTError
+from sqlalchemy.orm import Session
+from app.database.connection import get_db
+from app.models.professor import Professor
+
 
 SECRET_KEY = "sua_chave_secreta_aqui"  # mudar para uma variável de ambiente
 ALGORITHM = "HS256"
@@ -27,3 +33,27 @@ def create_access_token(data: dict) -> str:
     to_encode.update({"exp": expire})
     token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
+
+
+
+
+
+def get_current_professor(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("professor_access_token")
+
+    if not token:
+        raise HTTPException(status_code=401, detail="Não autenticado")
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        professor_id: int = payload.get("id")
+
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
+    professor = db.query(Professor).filter(Professor.id == professor_id).first()
+
+    if not professor:
+        raise HTTPException(status_code=404, detail="Professor não encontrado")
+
+    return professor
